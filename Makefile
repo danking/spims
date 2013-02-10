@@ -1,5 +1,13 @@
+ifndef SPIMS_RACKET_BIN
+	SPIMS_RACKET_BIN=/proj/racket/bin
+endif
+
+ifndef SPIMS_RACKET
+	SPIMS_RACKET=${SPIMS_RACKET_BIN}/racket
+endif
+
 ifndef SPIMS_RACO
-	SPIMS_RACO=/proj/racket/bin/raco
+	SPIMS_RACO=${SPIMS_RACKET_BIN}/raco
 endif
 
 ifndef SPIMS_ENTRY_POINT
@@ -24,3 +32,6 @@ all:
 
 byte-compile:
 	@${SPIMS_COMPILE} ${SPIMS_ENTRY_POINT}
+
+test:
+	@${SPIMS_RACKET} tests/run-all-tests.rkt
