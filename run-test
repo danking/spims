@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# check for empty input
+if [[ $* = "" ]]
+then
+   echo "Please provide the name of at least one source file"
+
+   exit 1
+fi
+
+# check for filenames which aren't racket files
+for filename in $*
+do
+  if $(echo $filename | grep --extended-regexp --quiet --invert-match --regexp="\.rkt")
+  then
+      echo -e "Warning: the file $filename doesn't appear to be of the form NAME.rkt, so this probably will fail"
+  fi
+done
+
+# build a list of racket files and racket test-suites
+RT_FILES=
+RT_SUITES=
+
+for filename in $*
+do
+  RT_FILES="$RT_FILES \"$filename\""
+  RT_SUITES="$RT_SUITES $(echo $filename | sed 's/\.rkt$//' | tr 'A-Z' 'a-z')-tests"
+done
+
+# quietly switch to tests
+pushd tests > /dev/null
+
+echo -e "\nThe racket REPL will appear to be waiting for input; however, be patient. The REPL is executing the tests you've requested\n"
+
+echo "\
+(require rackunit rackunit/text-ui $RT_FILES)
+(run-tests (test-suite \"\" $RT_SUITES))\
+" | racket
+
+# quietly switch back to the old cwd
+popd > /dev/null
