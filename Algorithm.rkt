@@ -1,5 +1,5 @@
-
 #lang racket
+
 (require 2htdp/image)
 (require picturing-programs)
 (require rackunit)
@@ -30,7 +30,7 @@
 (define 5x5red
   (vector red-vector red-vector red-vector red-vector red-vector))
 
-(define 5x5blue 
+(define 5x5blue
   (vector blue-vector blue-vector blue-vector blue-vector blue-vector))
 
 (define 5x5green
@@ -62,10 +62,10 @@
         ;;Pattern has been entirely checked, match confirmed!
         [(and (= px p-columns) (= py p-rows)) #t]
         ;;Pattern has reached the end of the line but continues on the next line
-        [(and (= px p-columns) (< py p-rows)) 
+        [(and (= px p-columns) (< py p-rows))
          (match-pattern p t (- px p-columns) (+ 1 py) (- tx p-columns) (+ 1 ty) p-rows p-columns t-rows t-columns)]
         ;;Continue checking by recursing one pixel to the right
-        [else (match-pattern p t (+ px 1) py (+ tx 1) ty p-rows p-columns t-rows t-columns)])   
+        [else (match-pattern p t (+ px 1) py (+ tx 1) ty p-rows p-columns t-rows t-columns)])
       (cond
         ;;Each pixel in target has been checked and do not return a match
         [(and (= tx t-columns) (= ty t-rows)) #f]
