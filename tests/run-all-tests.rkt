@@ -16,12 +16,14 @@
          rackunit/text-ui ;; for run-tests
          "parse-command-line.rkt"
          "load-image-file.rkt"
-         "2htdp-compatibility.rkt")
+         "2htdp-compatibility.rkt"
+         "data-transformers.rkt")
 
 (run-tests (test-suite "all-tests"
                        parse-command-line-tests
                        load-image-file-tests
-                       2htdp-compatibility-tests))
+                       2htdp-compatibility-tests
+                       data-transformers-tests))
 
 
 
