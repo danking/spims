@@ -1,41 +1,9 @@
 #lang racket
 
-(require 2htdp/image)
-(require picturing-programs)
-(require rackunit)
+(require 2htdp/image
+         picturing-programs)
 
-;; A bunch of color and vector building blocks for testing
-
-(define blue (make-color 0 0 255))
-(define red (make-color 255 0 0))
-(define green (make-color 0 255 0))
-
-(define blue-vector (vector blue blue blue blue blue))
-(define green-vector (vector green green green green green))
-(define red-vector (vector red red red red red))
-
-(define 20-red-vector (vector-append red-vector red-vector red-vector red-vector))
-(define 20-green-vector (vector-append green-vector green-vector green-vector green-vector))
-(define 20-blue-vector (vector-append blue-vector blue-vector blue-vector blue-vector))
-
-(define 1x1red
-  (vector (vector red)))
-
-(define 1x1green
-  (vector (vector green)))
-
-(define 1x1blue
-  (vector (vector blue)))
-
-(define 5x5red
-  (vector red-vector red-vector red-vector red-vector red-vector))
-
-(define 5x5blue
-  (vector blue-vector blue-vector blue-vector blue-vector blue-vector))
-
-(define 5x5green
-  (vector green-vector green-vector green-vector green-vector green-vector))
-
+(provide match match-pattern valid-pixel? pixels-match?)
 
 ;; Match will eventually generate a match struct to then send to the output, right now it gives #t or #f for a match
 
@@ -90,13 +58,3 @@
            (vector-ref (vector-ref t ty) tx)))
 
 
-;; Some tests
-
-;; Currently working on the vector-ref error... :/
-
-(time (match 5x5green 5x5blue))
-(time (match 5x5blue 5x5red))
-(time (match 5x5red 1x1blue))
-(time (match 1x1red 5x5red))
-(time (match 5x5green 5x5green))
-(time (match 1x1blue 1x1blue))
