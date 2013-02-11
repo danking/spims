@@ -15,11 +15,13 @@
 (require rackunit
          rackunit/text-ui ;; for run-tests
          "parse-command-line.rkt"
-         "load-image-file.rkt")
+         "load-image-file.rkt"
+         "2htdp-compatibility.rkt")
 
 (run-tests (test-suite "all-tests"
                        parse-command-line-tests
-                       load-image-file-tests))
+                       load-image-file-tests
+                       2htdp-compatibility-tests))
 
 
 
