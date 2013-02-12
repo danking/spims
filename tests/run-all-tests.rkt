@@ -14,10 +14,12 @@
 
 (require rackunit
          rackunit/text-ui ;; for run-tests
-         "parse-command-line.rkt")
+         "parse-command-line.rkt"
+         "load-image-file.rkt")
 
 (run-tests (test-suite "all-tests"
-                       parse-command-line-tests))
+                       parse-command-line-tests
+                       load-image-file-tests))
 
 
 

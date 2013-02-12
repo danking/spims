@@ -34,4 +34,4 @@ byte-compile:
 	@${SPIMS_COMPILE} ${SPIMS_ENTRY_POINT}
 
 test:
-	@${SPIMS_RACKET} tests/run-all-tests.rkt
+	@cd tests && ${SPIMS_RACKET} run-all-tests.rkt; cd ..
