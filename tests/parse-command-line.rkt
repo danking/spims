@@ -1,14 +1,10 @@
 #lang racket
 
 (require rackunit
-         "../parse-command-line.rkt")
+         "../parse-command-line.rkt"
+         "test-utils.rkt")
 
 (provide parse-command-line-tests)
-
-(define-syntax check-error
-  (syntax-rules ()
-    ((check-error expression)
-     (check-exn exn:fail? (lambda () expression)))))
 
 (define parse-command-line-tests
   (test-suite
