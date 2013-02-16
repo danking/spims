@@ -2,7 +2,7 @@
 
 (provide pixel pixel-red pixel-blue pixel-green
          get-pixel-at bitmap-width bitmap-height
-         create-bitmap)
+         create-bitmap pixels-match-with-tolerance? get-diff-sum)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; data-structures.rkt
@@ -57,3 +57,20 @@
   (for/vector ((y (in-range height)))
     (for/vector ((x (in-range width)))
       (generator x y))))
+
+;; pixels-match-with-tolerance? ImageBitmap ImageBitmap Number Number Number Number -> Boolean
+;;
+;; Compares the tolerance global to the sum of the differences of P and T's pixel color components
+(define (pixels-match-with-tolerance? p t px py tx ty tol)
+  (let ([p-pixel (get-pixel-at p py px)]
+        [t-pixel (get-pixel-at t ty tx)])
+    (>= tol (get-diff-sum p-pixel t-pixel))))
+
+
+;; get-diff-sum pixel pixel -> Number
+;;
+;; Computes the Sum of absolute difference value for two pixels
+(define (get-diff-sum pixel1 pixel2)
+  (+ (abs (- (pixel-red pixel1) (pixel-red pixel2)))
+     (abs (- (pixel-green pixel1) (pixel-green pixel2)))
+     (abs (- (pixel-blue pixel1) (pixel-blue pixel2)))))

@@ -5,12 +5,12 @@
          2htdp/image
          picturing-programs)
 
-(provide match match-pattern valid-pixel? pixels-match?)
+(provide match match-pattern valid-pixel? pixels-match? pixels-match-with-tolerance?)
 
 ;; Match will eventually generate a match struct to then send to the output, right now it gives #t or #f for a match
 
 
-;;(vector (vector pixel)) (vector (vector pixel)) -> Boolean
+;;(vector (vector pixel)) (vector (vector pixel)) -> (Listof Match)
 ;; Match takes a pattern (p) and target (t) vector of vectors of pixels and returns true if p exists in t
 (define (match p t)
   ;; Some useful information from our images
@@ -21,16 +21,16 @@
   ;; Begins pattern matching at 0 0 in both p and t
   (match-pattern p t 0 0 0 0 p-rows p-columns t-rows t-columns))
 
-;; (vector (vector pixel)) (vector (vector pixel)) int int int int int int int -> Boolean
+;; (vector (vector pixel)) (vector (vector pixel)) int int int int int int int -> (Listof Match)
 ;; Match-pattern takes the p, t, the x,y location in both p and t as well as the image widths/lengths
 ;; Produces a boolean if p and t match.
 
 (define (match-pattern p t px py tx ty p-rows p-columns t-rows t-columns)
   ;; Is the pixel valid and are the pixels of the two images the same color?
-  (if (and (valid-pixel? px py tx ty p-rows p-columns t-rows t-columns) (pixels-match? p t px py tx ty))
+  (if (and (valid-pixel? px py tx ty p-rows p-columns t-rows t-columns) (pixels-match-with-tolerance? p t px py tx ty))
       (cond
         ;;Pattern has been entirely checked, match confirmed!
-        [(and (= px (- p-columns 1)) (= py (- p-rows 1))) #t]
+        [(and (= px (- p-columns 1)) (= py (- p-rows 1))) (list (match p t 1 1 (- tx px) (- ty py)))]
         ;;Pattern has reached the end of the line but continues on the next line
         [(and (= px (- p-columns 1)) (< py (- p-rows 1)))
          (match-pattern p t (- px (- p-columns 1)) (+ 1 py) (- tx (- p-columns 1)) (+ 1 ty) p-rows p-columns t-rows t-columns)]
@@ -38,7 +38,7 @@
         [else (match-pattern p t (+ px 1) py (+ tx 1) ty p-rows p-columns t-rows t-columns)])
       (cond
         ;;Each pixel in target has been checked and do not return a match
-        [(and (= tx (- t-columns 1)) (= ty (- t-rows 1))) #f]
+        [(and (= tx (- t-columns 1)) (= ty (- t-rows 1))) '()]
         ;;Restart match-pattern at the beginning of the next row
         [(= tx (- t-columns 1)) (match-pattern p t 0 0 0 (+ ty 1) p-rows p-columns t-rows t-columns)]
         ;;Else move one right of the patterns upper left corner
@@ -56,8 +56,3 @@
    (<= py ty)
    (<= p-rows t-rows)
    (<= p-columns t-columns)))
-
-;; references the pixel within the pattern and target and checks if their color elements are equal
-(define (pixels-match? p t px py tx ty)
-  (equal? (get-pixel-at p py px)
-          (get-pixel-at t ty tx)))
