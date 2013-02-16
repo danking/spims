@@ -5,7 +5,7 @@
          2htdp/image
          picturing-programs)
 
-(provide match match-pattern valid-pixel? pixels-match? pixels-match-with-tolerance?)
+(provide match match-pattern valid-pixel? pixels-match-with-tolerance?)
 
 ;; Match will eventually generate a match struct to then send to the output, right now it gives #t or #f for a match
 
