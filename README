@@ -13,3 +13,11 @@ Michael.Gnieski@gmail.com
 
 Mike Murray
 murray.mich@husky.neu.edu
+
+
+Compiling:
+Our project can be compiled by simply entering 'make' in the
+root directory of our project on any CCIS Linux machine.
+
+External Software Used:
+Only standard Racket libraries
