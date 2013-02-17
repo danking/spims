@@ -35,3 +35,6 @@ byte-compile:
 
 test:
 	@cd tests && ${SPIMS_RACKET} run-all-tests.rkt; cd ..
+
+package:
+	@tar czf spims.tar.gz Makefile README ./*.rkt
