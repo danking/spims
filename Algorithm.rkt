@@ -2,8 +2,7 @@
 
 (require "data-structures.rkt"
          "2htdp-compatibility.rkt"
-         2htdp/image
-         picturing-programs)
+         2htdp/image)
 
 (provide match match-pattern valid-pixel? pixels-match-with-tolerance?)
 
