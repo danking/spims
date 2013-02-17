@@ -1,5 +1,7 @@
 #lang racket
 
+(provide print-match)
+
 (struct match
   ( pattern-img
     source-img

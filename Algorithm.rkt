@@ -2,6 +2,7 @@
 
 (require "data-structures.rkt"
          "2htdp-compatibility.rkt"
+         "print-matches.rkt"
          2htdp/image)
 
 (provide match match-pattern valid-pixel? pixels-match-with-tolerance?)
@@ -31,7 +32,7 @@
   (if (and (valid-pixel? px py tx ty p-rows p-columns t-rows t-columns) (pixels-match-with-tolerance? p t px py tx ty tol))
       (cond
         ;;Pattern has been entirely checked, match confirmed!
-        [(and (= px (- p-columns 1)) (= py (- p-rows 1))) (list (match p t 1 1 (- tx px) (- ty py)))]
+        [(and (= px (- p-columns 1)) (= py (- p-rows 1))) (print-match (match p t 1 1 (- tx px) (- ty py)))]
         ;;Pattern has reached the end of the line but continues on the next line
         [(and (= px (- p-columns 1)) (< py (- p-rows 1)))
          (match-pattern p t (- px (- p-columns 1)) (+ 1 py) (- tx (- p-columns 1)) (+ 1 ty) p-rows p-columns t-rows t-columns tol)]
@@ -39,7 +40,7 @@
         [else (match-pattern p t (+ px 1) py (+ tx 1) ty p-rows p-columns t-rows t-columns tol)])
       (cond
         ;;Each pixel in target has been checked and do not return a match
-        [(and (= tx (- t-columns 1)) (= ty (- t-rows 1))) '()]
+        [(and (= tx (- t-columns 1)) (= ty (- t-rows 1))) null]
         ;;Restart match-pattern at the beginning of the next row
         [(= tx (- t-columns 1)) (match-pattern p t 0 0 0 (+ ty 1) p-rows p-columns t-rows t-columns tol)]
         ;;Else move one right of the patterns upper left corner
