@@ -14,7 +14,7 @@
 ;; Match takes a pattern (p) and target (t) vector of vectors of pixels and returns true if p exists in t
 (define (match p t)
   ;; Tolerance for JPEGs
-  (define tol 50)
+  (define tol 5)
   ;; Some useful information from our images
   (define p-rows (vector-length p))
   (define p-columns (vector-length (vector-ref p 0)))
@@ -32,7 +32,7 @@
   (if (and (valid-pixel? px py tx ty p-rows p-columns t-rows t-columns) (pixels-match-with-tolerance? p t px py tx ty tol))
       (cond
         ;;Pattern has been entirely checked, match confirmed!
-        [(and (= px (- p-columns 1)) (= py (- p-rows 1))) (print-match (match p t 1 1 (- tx px) (- ty py)))]
+        [(and (= px (- p-columns 1)) (= py (- p-rows 1))) (print (- tx px)) (print (- ty py))]
         ;;Pattern has reached the end of the line but continues on the next line
         [(and (= px (- p-columns 1)) (< py (- p-rows 1)))
          (match-pattern p t (- px (- p-columns 1)) (+ 1 py) (- tx (- p-columns 1)) (+ 1 ty) p-rows p-columns t-rows t-columns tol)]
@@ -52,7 +52,7 @@
   (and 
    (<= ty (- t-rows 1))
    (<= tx (- t-columns 1))
-   (<= px (- p-rows 1))
+   (<= py (- p-rows 1))
    (<= px (- p-columns 1)) 
    (<= px tx)
    (<= py ty)
