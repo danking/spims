@@ -20,7 +20,7 @@
   (define t-rows (vector-length t))
   (define t-columns (vector-length (vector-ref t 0)))
   ;; Begins pattern matching at 0 0 in both p and t
-  (match-pattern p t 0 0 0 0 p-rows p-columns t-rows t-columns))
+  (match-pattern p t 0 0 0 0 p-rows p-columns t-rows t-columns tol))
 
 ;; (vector (vector pixel)) (vector (vector pixel)) int int int int int int int -> (Listof Match)
 ;; Match-pattern takes the p, t, the x,y location in both p and t as well as the image widths/lengths
