@@ -2,7 +2,7 @@
 
 (provide print-match)
 
-(struct match
+(struct match-out
   ( pattern-img
     source-img
     m1
@@ -12,17 +12,17 @@
 
 (define (print-match result)
   (print (string-append
-          (match-pattern-img result)
+          (match-out-pattern-img result)
           " matches "
-          (match-source-img result)
+          (match-out-source-img result)
           " at "
-          (number->string (match-m1 result))
+          (number->string (match-out-m1 result))
           "x"
-          (number->string (match-n1 result))
+          (number->string (match-out-n1 result))
           "+"
-          (number->string (match-x result))
+          (number->string (match-out-x result))
           "+"
-          (number->string (match-y result))))
+          (number->string (match-out-y result))))
   (newline))
 
 (define (print-matches results)
