@@ -3,6 +3,7 @@
 (provide (struct-out pixel) (struct-out match)
          get-pixel-at bitmap-width bitmap-height
          create-bitmap pixels-match-with-tolerance? get-diff-sum
+         match-pixel-distance
          ;; parameters
          debug biggest-diff)
 
@@ -104,3 +105,7 @@
 ;;    top left corner of the source image
 
 (struct match (pattern-img source-img m1 n1 x y))
+
+(define (match-pixel-distance m1 m2)
+  (sqrt (+ (sqr (- (match-x m1) (match-x m2)))
+           (sqr (- (match-y m1) (match-y m2))))))
