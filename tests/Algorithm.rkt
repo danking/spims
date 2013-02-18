@@ -49,12 +49,26 @@
 ;; procedure we would like to time, the second is a *list* of arguments for said
 ;; procedure, the third is the expected result of the procedure, and the fourth
 ;; is the time maximum duration for which the procedure should run.
-(define-check (check-time<= procedure argument-list expected time)
+(define-check (check-time<= name procedure argument-list expected time)
   (let-values (((results cpu-time real-time gc-time)
                 (time-apply procedure argument-list)))
-    (unless (and (equal? (first results) expected)
-                 (<= real-time time))
-      (fail-check))))
+    (unless (equal? (first results) expected)
+      (with-check-info*
+       (list (make-check-name name)
+             (make-check-actual (first results))
+             (make-check-expected expected)
+             (make-check-message
+              (format "Values didn't match; cpu-time: ~a, real-time: ~a, gc-time ~a."
+                      cpu-time real-time gc-time)))
+       (lambda () (fail-check))))
+    (unless (<= real-time time)
+      (with-check-info*
+       (list (make-check-name name)
+             (make-check-message
+              (format (string-append "Values matched, but time was over limit of "
+                                     "~a; cpu-time: ~a, real-time: ~a, gc-time ~a.")
+                      time cpu-time real-time gc-time)))
+       (lambda () (fail-check))))))
 
 (define algorithm-tests
   (test-suite
@@ -68,9 +82,19 @@
     "timing tests"
 
     (let ((max-running-time 10000))
-      (check-time<= find-pattern-in-source (list 5x5green 5x5blue) false max-running-time)
-      (check-time<= find-pattern-in-source (list 5x5blue 5x5red) false max-running-time)
-      (check-time<= find-pattern-in-source (list 5x5red 1x1blue) false max-running-time)
-      (check-time<= find-pattern-in-source (list 1x1red 5x5red) false max-running-time)
-      (check-time<= find-pattern-in-source (list 5x5green 5x5green) false max-running-time)
-      (check-time<= find-pattern-in-source (list 1x1blue 1x1blue) true max-running-time)))))
+      (check-time<= "5x5 green with 5x5 blue"
+        find-pattern-in-source (list 5x5green 5x5blue) '() max-running-time)
+      (check-time<= "5x5 blue with 5x5 red"
+        find-pattern-in-source (list 5x5blue 5x5red) '() max-running-time)
+      (check-time<= "5x5 red with 1x1 blue"
+        find-pattern-in-source (list 5x5red 1x1blue) '() max-running-time)
+      (check-time<= "1x1 red with 5x5 red"
+        find-pattern-in-source (list 1x1red 5x5red)
+        (for*/list ((x (in-range 0 5))
+                    (y (in-range 0 5)))
+          (list x y))
+        max-running-time)
+      (check-time<= "5x5 green with 5x5 green"
+        find-pattern-in-source (list 5x5green 5x5green) '((0 0)) max-running-time)
+      (check-time<= "1x1 blue with 1x1 blue"
+        find-pattern-in-source (list 1x1blue 1x1blue) '((0 0)) max-running-time)))))

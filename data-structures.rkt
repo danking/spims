@@ -1,8 +1,10 @@
 #lang racket
 
-(provide pixel pixel-red pixel-blue pixel-green
+(provide (struct-out pixel) (struct-out match)
          get-pixel-at bitmap-width bitmap-height
-         create-bitmap pixels-match-with-tolerance? get-diff-sum)
+         create-bitmap pixels-match-with-tolerance? get-diff-sum
+         ;; parameters
+         debug biggest-diff)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; data-structures.rkt
@@ -58,14 +60,20 @@
     (for/vector ((x (in-range width)))
       (generator x y))))
 
+(define debug (make-parameter #f))
+(define biggest-diff (make-parameter 0))
+
 ;; pixels-match-with-tolerance? ImageBitmap ImageBitmap Number Number Number Number -> Boolean
 ;;
 ;; Compares the tolerance global to the sum of the differences of P and T's pixel color components
-(define (pixels-match-with-tolerance? p t px py tx ty tol)
-  (let ([p-pixel (get-pixel-at p py px)]
-        [t-pixel (get-pixel-at t ty tx)])
-    (>= tol (get-diff-sum p-pixel t-pixel))))
-
+(define (pixels-match-with-tolerance? p t px py tx ty tolerance)
+  (let* ([p-pixel (get-pixel-at p py px)]
+         [t-pixel (get-pixel-at t ty tx)]
+         [difference (get-diff-sum p-pixel t-pixel)]
+         [tolerable? (<= difference tolerance)])
+    (when (and (debug) tolerable?)
+      (biggest-diff difference))
+    tolerable?))
 
 ;; get-diff-sum pixel pixel -> Number
 ;;
@@ -74,3 +82,25 @@
   (+ (abs (- (pixel-red pixel1) (pixel-red pixel2)))
      (abs (- (pixel-green pixel1) (pixel-green pixel2)))
      (abs (- (pixel-blue pixel1) (pixel-blue pixel2)))))
+
+;; a Match is a
+;;   (match String String Number Number Number Number)
+;; where the fields:
+;;
+;;  - pattern-img is the pattern image's filename
+;;
+;;  - source-img is the source image's filename
+;;
+;;  - m1 is the width of the subimage that matches (which should be the same as
+;;    the width of the pattern image)
+;;
+;;  - n1 is the height of the subimage that matches <file1> (which should be the
+;;    same as the height of the pattern image)
+;;
+;;  - x is the horizontal offset of the top left corner of that subimage from
+;;    the top left corner of the source image
+;;
+;;  - y is the vertical offset of the top left corner of that subimage from the
+;;    top left corner of the source image
+
+(struct match (pattern-img source-img m1 n1 x y))
