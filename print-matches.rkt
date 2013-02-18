@@ -11,18 +11,18 @@
     y))
 
 (define (print-match result)
-  (print (string-append
-          (match-out-pattern-img result)
-          " matches "
-          (match-out-source-img result)
-          " at "
-          (number->string (match-out-m1 result))
-          "x"
-          (number->string (match-out-n1 result))
-          "+"
-          (number->string (match-out-x result))
-          "+"
-          (number->string (match-out-y result))))
+  (display (string-append
+            (match-out-pattern-img result)
+            " matches "
+            (match-out-source-img result)
+            " at "
+            (number->string (match-out-m1 result))
+            "x"
+            (number->string (match-out-n1 result))
+            "+"
+            (number->string (match-out-x result))
+            "+"
+            (number->string (match-out-y result))))
   (newline))
 
 (define (print-matches results)
