@@ -41,7 +41,7 @@
         [else (match-pattern p t (+ px 1) py (+ tx 1) ty p-rows p-columns t-rows t-columns tol p-filename t-filename)])
       (cond
         ;;Each pixel in target has been checked and do not return a match
-        [(and (>= tx (- t-columns 1)) (>= ty (- t-rows 1))) (newline)]
+        [(and (>= tx (- t-columns 1)) (>= ty (- t-rows 1))) (void)]
         ;;Restart match-pattern at the beginning of the next row
         [(>= tx (- t-columns 1)) (match-pattern p t 0 0 0 (+ ty 1) p-rows p-columns t-rows t-columns tol p-filename t-filename)]
         ;;Else move one right of the patterns upper left corner
