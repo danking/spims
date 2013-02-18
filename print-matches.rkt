@@ -1,6 +1,6 @@
 #lang racket
 
-(provide print-match)
+(provide print-match match-out)
 
 (struct match-out
   ( pattern-img
