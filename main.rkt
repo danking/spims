@@ -31,12 +31,19 @@
                                 pattern-filename
                                 source-filename))))
 
+(define (remove-near-duplicates list-of-matches)
+  (for/fold ((keepers '()))
+            ((m list-of-matches))
+    (if (for/and ((keeper keepers))
+          (>= (match-pixel-distance m keeper) 5))
+        (cons m keepers)
+        keepers)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; executed section
 
-(let-values (((pattern-filename source-filename)
+(let-values (((pattern-filename source-filename debug-setting)
               (parse-arguments (current-command-line-arguments))))
-  (parameterize ([debug #t]
-                 [biggest-diff 0])
-   (print-matches (image-filepath-pair->matches pattern-filename source-filename))
-   (printf "Biggest diff was ~a\n" (biggest-diff))))
+  (parameterize ([debug debug-setting])
+    (print-matches (remove-near-duplicates (image-filepath-pair->matches pattern-filename source-filename)))
+    (printf "Biggest diff was ~a\n" (biggest-diff))))
