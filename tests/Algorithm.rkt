@@ -2,8 +2,7 @@
 
 (require rackunit
          "../Algorithm.rkt"
-         picturing-programs
-         "test-utils.rkt")
+         "../data-structures.rkt")
 
 (provide algorithm-tests)
 
@@ -12,9 +11,9 @@
 
 ;; A bunch of color and vector building blocks for testing
 
-(define blue (make-color 0 0 255))
-(define red (make-color 255 0 0))
-(define green (make-color 0 255 0))
+(define blue (pixel 0 0 255))
+(define red (pixel 255 0 0))
+(define green (pixel 0 255 0))
 
 (define blue-vector (vector blue blue blue blue blue))
 (define green-vector (vector green green green green green))
