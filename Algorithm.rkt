@@ -14,7 +14,7 @@
 ;; Match takes a pattern (p) and target (t) vector of vectors of pixels and returns true if p exists in t
 (define (match p t p-filename t-filename)
   ;; Tolerance for JPEGs
-  (define tol 50)
+  (define tol 125)
   ;; Some useful information from our images
   (define p-rows (vector-length p))
   (define p-columns (vector-length (vector-ref p 0)))
