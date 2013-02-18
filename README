@@ -1,7 +1,9 @@
-SPIMS
+###########
+## SPIMS ##
+###########
 
-TeamName
-
+## Team Members ##
+##################
 Daniel King
 danking@ccs.neu.edu
 
@@ -15,9 +17,20 @@ Mike Murray
 murray.mich@husky.neu.edu
 
 
-Compiling:
+## Compiling ##
+###############
 Our project can be compiled by simply entering 'make' in the
-root directory of our project on any CCIS Linux machine.
+root directory of our project on any CCIS Linux machine. This
+will automatically create an executable called 'spims' which
+can be invoked exactly as shown on the Assignment 4 page:
+http://www.ccs.neu.edu/course/cs4500wc/assignment4.txt
 
-External Software Used:
+For example:
+
+./spims -p /course/cs4500wc/Assignments/A4/Patterns/black.jpg \
+        -s /course/cs4500wc/Assignments/A4/Sources/bb0001.jpg
+
+
+## External Software Used ##
+############################
 Only standard Racket libraries
