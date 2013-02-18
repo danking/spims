@@ -32,7 +32,8 @@
   (if (and (valid-pixel? px py tx ty p-rows p-columns t-rows t-columns) (pixels-match-with-tolerance? p t px py tx ty tol))
       (cond
         ;;Pattern has been entirely checked, match confirmed!
-        [(and (= px (- p-columns 1)) (= py (- p-rows 1))) (print-match (match-out p-filename t-filename 1 1 (- tx px) (- ty py)))]
+        [(and (= px (- p-columns 1)) (= py (- p-rows 1))) 
+         (print-match (match-out (get-path-filename p-filename) (get-path-filename t-filename) 1 1 (- tx px) (- ty py)))]
         ;;Pattern has reached the end of the line but continues on the next line
         [(and (= px (- p-columns 1)) (< py (- p-rows 1)))
          (match-pattern p t (- px (- p-columns 1)) (+ 1 py) (- tx (- p-columns 1)) (+ 1 ty) p-rows p-columns t-rows t-columns tol p-filename t-filename)]
@@ -47,7 +48,7 @@
         [else (match-pattern p t 0 0 (+ 1 (- tx px)) (- ty py) p-rows p-columns t-rows t-columns tol p-filename t-filename)])))
 
 
-;; takes current pixel positions and image information
+;; takes current pixel positions and image information and returns true if the pixel falls within the target.
 (define (valid-pixel? px py tx ty p-rows p-columns t-rows t-columns)
   (and 
    (<= ty (- t-rows 1))
@@ -58,3 +59,9 @@
    (<= py ty)
    (<= p-rows t-rows)
    (<= p-columns t-columns)))
+
+;; takes the filepath and produces the filename at the end of the path
+(define (get-path-filename filepath)
+  (let-values (((a b c)
+                (split-path filepath)))
+    (path->string b)))
