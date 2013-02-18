@@ -1,29 +1,29 @@
 #lang racket
 
-(provide print-match match-out)
+(require "data-structures.rkt")
 
-(struct match-out
-  ( pattern-img
-    source-img
-    m1
-    n1
-    x
-    y))
+(provide print-match print-matches)
 
 (define (print-match result)
   (display (string-append
-            (match-out-pattern-img result)
+            (get-path-filename (match-pattern-img result))
             " matches "
-            (match-out-source-img result)
+            (get-path-filename (match-source-img result))
             " at "
-            (number->string (match-out-m1 result))
+            (number->string (match-m1 result))
             "x"
-            (number->string (match-out-n1 result))
+            (number->string (match-n1 result))
             "+"
-            (number->string (match-out-x result))
+            (number->string (match-x result))
             "+"
-            (number->string (match-out-y result))))
+            (number->string (match-y result))))
   (newline))
+
+;; takes the filepath and produces the filename at the end of the path
+(define (get-path-filename filepath)
+  (let-values (((a b c)
+                (split-path filepath)))
+    (path->string b)))
 
 (define (print-matches results)
   ;; filter matches for duplicates...

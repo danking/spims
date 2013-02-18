@@ -16,7 +16,8 @@
 ;; parse-arguments : [Vector String] -> [Values String String]
 (define (parse-arguments arguments)
   (let ((pattern-image-filename #f)
-        (source-image-filename #f))
+        (source-image-filename #f)
+        (debug #f))
     ;; This expression returns (void) because there is no #:args clause. A #:args
     ;; clause could be used to parse arguments which succeed the regular, flagged
     ;; arguments.
@@ -26,7 +27,9 @@
                   ["-p" filename "the pattern image"
                    (set! pattern-image-filename filename)]
                   ["-s" filename "the source image"
-                   (set! source-image-filename filename)])
+                   (set! source-image-filename filename)]
+                  [("-d" "--debug") "increased debug output"
+                   (set! debug #t)])
     ;; verify that the necessary arguments were passed
     (unless source-image-filename
       (error 'parse-arguments
@@ -36,4 +39,4 @@
              "You must specify a pattern image -- see 'spims -h' for help."))
     ;; this returns two values, you can use a (let-values (((a b) ...) ...) ...)
     ;; form to capture these values
-    (values pattern-image-filename source-image-filename)))
+    (values pattern-image-filename source-image-filename debug)))
