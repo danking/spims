@@ -37,4 +37,12 @@ test:
 	@cd tests && ${SPIMS_RACKET} run-all-tests.rkt; cd ..
 
 package:
-	@tar czf spims.tar.gz Makefile README ./*.rkt
+	$(eval $@_TMP := $(shell mktemp -d))
+	$(eval $@_ZIP_DIR := $($@_TMP)/spims)
+	$(eval $@_CWD := $(shell pwd))
+	@mkdir $($@_ZIP_DIR)
+	@cp Makefile $($@_ZIP_DIR)
+	@cp README $($@_ZIP_DIR)
+	@cp ./*.rkt $($@_ZIP_DIR)
+	@cd $($@_TMP) && tar czf $($@_CWD)/spims.tar.gz spims && cd $($@_CWD)
+	@rm -rf $($@_TMP)
