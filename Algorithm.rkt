@@ -33,7 +33,7 @@
       (cond
         ;;Pattern has been entirely checked, match confirmed!
         [(and (= px (- p-columns 1)) (= py (- p-rows 1))) 
-         (print-match (match-out (get-path-filename p-filename) (get-path-filename t-filename) 1 1 (- tx px) (- ty py)))]
+         (print-match (match-out (get-path-filename p-filename) (get-path-filename t-filename) p-columns p-rows (- tx px) (- ty py)))]
         ;;Pattern has reached the end of the line but continues on the next line
         [(and (= px (- p-columns 1)) (< py (- p-rows 1)))
          (match-pattern p t (- px (- p-columns 1)) (+ 1 py) (- tx (- p-columns 1)) (+ 1 ty) p-rows p-columns t-rows t-columns tol p-filename t-filename)]
