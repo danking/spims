@@ -45,5 +45,4 @@
 (let-values (((pattern-filename source-filename debug-setting)
               (parse-arguments (current-command-line-arguments))))
   (parameterize ([debug debug-setting])
-    (print-matches (remove-near-duplicates (image-filepath-pair->matches pattern-filename source-filename)))
-    (printf "Biggest diff was ~a\n" (biggest-diff))))
+    (print-matches (remove-near-duplicates (image-filepath-pair->matches pattern-filename source-filename)))))
