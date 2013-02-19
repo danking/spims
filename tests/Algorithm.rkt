@@ -68,9 +68,9 @@
     "timing tests"
 
     (let ((max-running-time 10000))
-      (check-time<= match (list 5x5green 5x5blue) false max-running-time)
-      (check-time<= match (list 5x5blue 5x5red) false max-running-time)
-      (check-time<= match (list 5x5red 1x1blue) false max-running-time)
-      (check-time<= match (list 1x1red 5x5red) false max-running-time)
-      (check-time<= match (list 5x5green 5x5green) false max-running-time)
-      (check-time<= match (list 1x1blue 1x1blue) true max-running-time)))))
+      (check-time<= find-pattern-in-source (list 5x5green 5x5blue) false max-running-time)
+      (check-time<= find-pattern-in-source (list 5x5blue 5x5red) false max-running-time)
+      (check-time<= find-pattern-in-source (list 5x5red 1x1blue) false max-running-time)
+      (check-time<= find-pattern-in-source (list 1x1red 5x5red) false max-running-time)
+      (check-time<= find-pattern-in-source (list 5x5green 5x5green) false max-running-time)
+      (check-time<= find-pattern-in-source (list 1x1blue 1x1blue) true max-running-time)))))

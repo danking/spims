@@ -5,14 +5,17 @@
          "print-matches.rkt"
          2htdp/image)
 
-(provide match match-pattern valid-pixel? pixels-match-with-tolerance?)
+(provide find-pattern-in-source match-pattern
+         valid-pixel? pixels-match-with-tolerance?)
 
 ;; Match will eventually generate a match struct to then send to the output, right now it gives #t or #f for a match
 
 
 ;;(vector (vector pixel)) (vector (vector pixel)) -> (Listof Match)
 ;; Match takes a pattern (p) and target (t) vector of vectors of pixels and returns true if p exists in t
-(define (match p t p-filename t-filename)
+(define (find-pattern-in-source p t)
+  (define p-filename #f)
+  (define t-filename #f)
   ;; Tolerance for JPEGs
   (define tol 200)
   ;; Some useful information from our images
