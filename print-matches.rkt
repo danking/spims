@@ -1,9 +1,10 @@
-#lang racket
+#lang typed/racket
 
 (require "data-structures.rkt")
 
 (provide print-match print-matches)
 
+(: print-match : match -> Void)
 (define (print-match result)
   (display (string-append
             (get-path-filename (match-pattern-img result))
@@ -20,11 +21,13 @@
   (newline))
 
 ;; takes the filepath and produces the filename at the end of the path
+(: get-path-filename : Path -> String)
 (define (get-path-filename filepath)
   (let-values (((a b c)
                 (split-path filepath)))
     (path->string b)))
 
+(: print-matches : (Listof match) -> (Listof match))
 (define (print-matches results)
   ;; filter matches for duplicates...
   (for-each print-match results))

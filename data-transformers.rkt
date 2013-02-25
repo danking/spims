@@ -1,4 +1,4 @@
-#lang racket
+#lang typed/racket
 
 (require "data-structures.rkt")
 
@@ -14,6 +14,7 @@
 ;; A map procedure for the ImageBitmap datatype. The transformer should expect
 ;; the x and y coordinates of the pixel as the second and third arguments,
 ;; respectively.
+(: map-bitmap : (pixel Number Number -> pixel) (Vector (Vector pixel)) -> (Vector (Vector pixel)))
 (define (map-bitmap transformer bitmap)
   (for/vector (((row y) (in-indexed bitmap)))
     (for/vector (((element x) (in-indexed row)))
@@ -38,6 +39,7 @@
 ;; elements in order (as opposed to right folds, which process the elements in
 ;; reverse order), which means that (foldl cons '() '(1 2 3)) does not equal '(1
 ;; 2 3).
+(: fold-bitmap : (pixel Number Number A -> A) (A Number B -> B) A B (Vector (Vector pixel)) -> B)
 (define (fold-bitmap pixel-transformer row-transformer
                      pixel-base row-base
                      bitmap)

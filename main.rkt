@@ -1,4 +1,4 @@
-#lang racket
+#lang typed/racket
 
 (require "data-structures.rkt"
          "load-image-file.rkt"
@@ -9,6 +9,7 @@
 (define TOLERANCE 125)
 
 ;; match-coordinates->match : [List Number Number] Number Number String String
+(: match-coordinates->match : (List Number Number) Number Number String String -> match)
 (define (match-coordinates->match match-coordinate match-width match-height pattern-filename source-filename)
   (let ((x (first match-coordinate))
         (y (second match-coordinate)))
@@ -17,6 +18,7 @@
            x y)))
 
 ;; image-filepath-pair->matches : String String -> [ListOf Match]
+(: image-filepath-pair->matches : String String -> (Listof match))
 (define (image-filepath-pair->matches pattern-filename source-filename)
   (let ((pattern-image (load-image-file pattern-filename))
         (source-image (load-image-file source-filename)))
@@ -31,6 +33,7 @@
                                 pattern-filename
                                 source-filename))))
 
+(: remove-near-duplicates : (Listof match) -> (Listof match))
 (define (remove-near-duplicates list-of-matches)
   (for/fold ((keepers '()))
             ((m list-of-matches))

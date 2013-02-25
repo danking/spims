@@ -1,4 +1,4 @@
-#lang racket
+#lang typed/racket
 
 (require "data-structures.rkt"
          "2htdp-compatibility.rkt"
@@ -15,9 +15,11 @@
 ;; Match takes a pattern (p) and target (t) vector of vectors of pixels and
 ;; produces a list of pairs representing the X and Y coordinates of all possible
 ;; matching coordinates
+(: find-pattern-in-source : (Vector (Vector pixel)) (Vector (Vector pixel)) -> (Listof (List Number Number)))
 (define (find-pattern-in-source pattern source)
   (find-pattern-in-source/tolerance pattern source 0))
 
+(: find-pattern-in-source/tolerance : (Vector (Vector pixel)) (Vector (Vector pixel)) Number -> (Listof (List Number Number)))
 (define (find-pattern-in-source/tolerance pattern source pixel-difference-tolerance)
   (for*/list ((top-left-x (in-range 0 (add1 (- (bitmap-width source) (bitmap-width pattern)))))
               (top-left-y (in-range 0 (add1 (- (bitmap-height source) (bitmap-height pattern)))))
@@ -26,6 +28,7 @@
                                                 pixel-difference-tolerance))
     (list top-left-x top-left-y)))
 
+(: find-pattern-in-source-at : Number Number (Vector (Vector pixel)) (Vector (Vector pixel)) Number -> Boolean)
 (define (find-pattern-in-source-at top-left-x top-left-y
                                    pattern source
                                    pixel-difference-tolerance)

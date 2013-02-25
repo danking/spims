@@ -1,4 +1,4 @@
-#lang racket
+#lang typed/racket
 
 (require racket/draw
          "data-structures.rkt")
@@ -14,6 +14,7 @@
 
 
 ;; load-image-file : String -> ImageBitmap
+(: load-image-file : String -> (Vector (Vector pixel)))
 (define (load-image-file filename)
   (unless (file-exists? filename)
     (error 'load-image-file
@@ -31,6 +32,7 @@
 ;; filename->bitmap% : String -> (U False bitmap%)
 ;;
 ;; loads the file into a bitmap object, or, if that fails, returns false
+(: filename->bitmap% : String -> (U False bitmap%))
 (define (filename->bitmap% filename)
   (let* ((new-image
           (make-object bitmap%
@@ -56,6 +58,7 @@
 ;; extracts the entire image as a sequence of bytes and returns those bytes as
 ;; well as the image width and height IN PIXELS (i.e. the byte matrix is (*
 ;; width 4) bytes wide).
+(: bitmap%->bytes : bitmap% -> (Values Bytes Number Number))
 (define (bitmap%->bytes bm)
   (let* ((width (send bm get-width))
          (height (send bm get-height))
@@ -82,6 +85,7 @@
 ;; Note that the Bytes array is always 4 * image-width * image-height bytes
 ;; long, i.e., there are four bytes assigned to each pixel. The pixel channels
 ;; are stored in the order: Alpha, Red, Green, Blue.
+(: get-rgb-at : Bytes Number Number Number -> (Values Number Number Number))
 (define (get-rgb-at bytes row-width-in-pixels row column)
   (let ((row-width-in-bytes (* row-width-in-pixels 4)))
     (let ((row-pixel-offset (* row row-width-in-bytes))
@@ -96,6 +100,7 @@
 ;;
 ;; Converts a byte-array into a vector of vector of pixel structures. Note that
 ;; the width and height here are the image's pixel-width and pixel-height.
+(: bytes->pixel-matrix : Bytes Number Number -> (Vector (Vector pixel)))
 (define (bytes->pixel-matrix bytes width height)
   (for/vector #:length height
               ([row (in-range height)])

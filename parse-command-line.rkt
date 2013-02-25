@@ -1,4 +1,4 @@
-#lang racket
+#lang typed/racket
 
 (require racket/cmdline)
 
@@ -14,6 +14,7 @@
 ;; where the first file is a pattern image and the second file is a source image
 
 ;; parse-arguments : [Vector String] -> [Values String String]
+(: parse-arguments (Vector String) -> (Values String String))
 (define (parse-arguments arguments)
   (let ((pattern-image-filename #f)
         (source-image-filename #f)
