@@ -31,14 +31,6 @@
                                 pattern-filename
                                 source-filename))))
 
-(define (remove-near-duplicates list-of-matches)
-  (for/fold ((keepers '()))
-            ((m list-of-matches))
-    (if (for/and ((keeper keepers))
-          (>= (match-pixel-distance m keeper) 5))
-        (cons m keepers)
-        keepers)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; executed section
 
@@ -48,6 +40,5 @@
     (for* ((pattern-filename pattern-filenames)
            (source-filename source-filenames))
       (print-matches
-       (remove-near-duplicates
-        (image-filepath-pair->matches pattern-filename
-                                      source-filename))))))
+       (image-filepath-pair->matches pattern-filename
+                                     source-filename)))))
