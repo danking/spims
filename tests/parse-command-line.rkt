@@ -24,24 +24,24 @@
      (check-error (parse-arguments (vector "-sdir" "DOESNTEXISTDIR/" "-p" "images/10x30-red.jpg"))))
 
     (let-values (((pattern source debug)
-                  (parse-arguments (vector "-pdir" "images/Sources"
+                  (parse-arguments (vector "-pdir" "images/A4/Sources"
                                            "-s" "images/10x30-red.jpg"))))
-      (check-equal? pattern (directory-list "images/Sources"))
+      (check-equal? pattern (directory-list "images/A4/Sources"))
       (check-equal? source (list (string->path "images/10x30-red.jpg")))
       (check-false debug))
 
     (let-values (((pattern source debug)
                   (parse-arguments (vector "-p" "images/10x30-red.jpg"
-                                           "-sdir" "images/Sources"))))
+                                           "-sdir" "images/A4/Sources"))))
       (check-equal? pattern (list (string->path "images/10x30-red.jpg")))
-      (check-equal? source (directory-list "images/Sources"))
+      (check-equal? source (directory-list "images/A4/Sources"))
       (check-false debug))
 
     (let-values (((pattern source debug)
-                  (parse-arguments (vector "-pdir" "images/Patterns"
-                                           "-sdir" "images/Sources"))))
-      (check-equal? pattern (directory-list "images/Patterns"))
-      (check-equal? source (directory-list "images/Sources"))
+                  (parse-arguments (vector "-pdir" "images/A4/Patterns"
+                                           "-sdir" "images/A4/Sources"))))
+      (check-equal? pattern (directory-list "images/A4/Patterns"))
+      (check-equal? source (directory-list "images/A4/Sources"))
       (check-false debug)))
 
    (test-suite
