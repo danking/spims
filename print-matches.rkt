@@ -25,6 +25,36 @@
                 (split-path filepath)))
     (path->string b)))
 
+
+(define (duplicate? m1 m2)
+  (and (string=? (match-pattern-img m1) (match-pattern-img m2))
+       (string=? (match-source-img m1) (match-source-img m2))
+       (< (- (match-x m1) (match-x m2)) 5)
+       (< (- (match-y m1) (match-y m2)) 5)
+       (< (- (match-m1 m1) (match-m1 m2)) 5)
+       (< (- (match-n1 m1) (match-n1 m2)) 5)))
+
+(define (same-images m1 m2)
+  (and (string=? (match-pattern-img m1) (match-pattern-img m2))
+       (string=? (match-source-img m1) (match-source-img m2))))
+
+;(define (structure-by-image results prev-pattern prev-source)
+;  (cond [(empty? results) empty]
+;        [(= ((first results)cons (filter results
+
+
+;(define (filter-matches results)
+;  (for-each organized-filter (structure-by-image results "" "")))
+
+
+
+(define (simple-filter results)
+  (cond [(empty? results) empty]
+        [(empty? (rest results)) results]
+        [else (define r1 (first results))
+              (define (f x) (not (duplicate? r1 x)))
+              (cons r1 (simple-filter (filter f (rest results))))]))
+
 (define (print-matches results)
-  ;; filter matches for duplicates...
-  (for-each print-match results))
+  (define filtered-results (simple-filter results))
+  (for-each print-match filtered-results))
