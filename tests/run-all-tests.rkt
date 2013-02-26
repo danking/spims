@@ -18,14 +18,16 @@
          "load-image-file.rkt"
          "2htdp-compatibility.rkt"
          "data-transformers.rkt"
-         "Algorithm.rkt")
+         "Algorithm.rkt"
+         "integration.rkt")
 
 (run-tests (test-suite "all-tests"
                        parse-command-line-tests
                        load-image-file-tests
                        2htdp-compatibility-tests
                        data-transformers-tests
-                       algorithm-tests))
+                       algorithm-tests
+                       integration-tests))
 
 
 

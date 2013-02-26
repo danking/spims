@@ -31,6 +31,11 @@
    "Tests for load-image-file.rkt"
 
    (test-suite
+    "Assignment 5"
+
+    (check-not-exn (lambda () (load-image-file "images/A5/Patterns/tree.jpg"))))
+
+   (test-suite
     "30x30 black images"
 
     (test-equal? "jpg"
