@@ -41,7 +41,7 @@
                      (error 'parse-arguments
                             (format "The directory ~a does not exist (or isn't a directory)!"
                                     foldername)))
-                   (set! pattern-image-filenames (directory-list foldername))]
+                   (set! pattern-image-filenames (directory-list foldername #:build? #t))]
                   ;; sources
                   #:once-any
                   ["-s" filename "the source image"
@@ -54,7 +54,7 @@
                      (error 'parse-arguments
                             (format "The directory ~a does not exist (or isn't a directory)!"
                                     foldername)))
-                   (set! source-image-filenames (directory-list foldername))]
+                   (set! source-image-filenames (directory-list foldername #:build? #t))]
                   ;; debug flag
                   #:once-each
                   [("-d" "--debug") "increased debug output"
