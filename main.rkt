@@ -42,7 +42,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; executed section
 
-(let-values (((pattern-filename source-filename debug-setting)
+(let-values (((pattern-filenames source-filenames debug-setting)
               (parse-arguments (current-command-line-arguments))))
   (parameterize ([debug debug-setting])
-    (print-matches (remove-near-duplicates (image-filepath-pair->matches pattern-filename source-filename)))))
+    (for* ((pattern-filename pattern-filenames)
+           (source-filename source-filenames))
+      (print-matches
+       (remove-near-duplicates
+        (image-filepath-pair->matches pattern-filename
+                                      source-filename))))))

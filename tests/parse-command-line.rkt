@@ -10,36 +10,75 @@
   (test-suite
    "Tests for parse-command-line.rkt"
 
-   (let-values (((pattern source)
-                 (parse-arguments (vector "-p" "foo.jpg" "-s" "bar.png"))))
-     (check-equal? pattern "foo.jpg")
-     (check-equal? source "bar.png"))
+   (test-suite
+    "Assignment 5, directories"
 
-   (let-values (((pattern source)
-                 (parse-arguments (vector "-s" "bar.png" "-p" "foo.jpg"))))
-     (check-equal? pattern "foo.jpg")
-     (check-equal? source "bar.png"))
+    (test-suite
+     "path is not a directory"
+     (check-error (parse-arguments (vector "-pdir" "images/10x30-red.jpg" "-s" "images/10x30-red.jpg")))
+     (check-error (parse-arguments (vector "-sdir" "images/10x30-red.jpg" "-p" "images/10x30-red.jpg"))))
 
-   ;; missing -p
-   (check-error (parse-arguments (vector "-s" "bar.png" "foo.jpg")))
-   ;; missing -s
-   (check-error (parse-arguments (vector "bar.png" "-p" "foo.jpg")))
+    (test-suite
+     "directory doesn't exist"
+     (check-error (parse-arguments (vector "-pdir" "DOESNTEXISTDIR/" "-s" "images/10x30-red.jpg")))
+     (check-error (parse-arguments (vector "-sdir" "DOESNTEXISTDIR/" "-p" "images/10x30-red.jpg"))))
 
-   ;; missing pattern filename
-   (check-error (parse-arguments (vector "-s" "bar.png" "-p")))
-   ;; missing source filename
-   (check-error (parse-arguments (vector "-s" "-p" "foo.jpg")))
-   ;; missing both filenames
-   (check-error (parse-arguments (vector "-s" "-p")))
+    (let-values (((pattern source debug)
+                  (parse-arguments (vector "-pdir" "images/Sources"
+                                           "-s" "images/10x30-red.jpg"))))
+      (check-equal? pattern (directory-list "images/Sources"))
+      (check-equal? source (list (string->path "images/10x30-red.jpg")))
+      (check-false debug))
 
-   ;; missing source
-   (check-error (parse-arguments (vector "-p" "foo.jpg")))
-   ;; missing pattern
-   (check-error (parse-arguments (vector "-s" "bar.png")))
+    (let-values (((pattern source debug)
+                  (parse-arguments (vector "-p" "images/10x30-red.jpg"
+                                           "-sdir" "images/Sources"))))
+      (check-equal? pattern (list (string->path "images/10x30-red.jpg")))
+      (check-equal? source (directory-list "images/Sources"))
+      (check-false debug))
 
-   ;; no arguments
-   (check-error (parse-arguments (vector)))
-   ;; bogus extra flag
-   (check-error (parse-arguments (vector "-s" "bar.png" "-p" "foo.jpg" "-b")))
-   ;; bogus extra non-flag argument
-   (check-error (parse-arguments (vector "-s" "bar.png" "-p" "foo.jpg" "bogus")))))
+    (let-values (((pattern source debug)
+                  (parse-arguments (vector "-pdir" "images/Patterns"
+                                           "-sdir" "images/Sources"))))
+      (check-equal? pattern (directory-list "images/Patterns"))
+      (check-equal? source (directory-list "images/Sources"))
+      (check-false debug)))
+
+   (test-suite
+    "Assignment 4, no directories"
+
+    (let-values (((pattern source debug)
+                  (parse-arguments (vector "-p" "images/30x30-black.png" "-s" "images/10x30-red.jpg"))))
+      (check-equal? pattern (list (string->path "images/30x30-black.png")))
+      (check-equal? source (list (string->path "images/10x30-red.jpg")))
+      (check-false debug))
+
+    (let-values (((pattern source debug)
+                  (parse-arguments (vector "-s" "images/10x30-red.jpg" "-p" "images/30x30-black.png"))))
+      (check-equal? pattern (list (string->path "images/30x30-black.png")))
+      (check-equal? source (list (string->path "images/10x30-red.jpg")))
+      (check-false debug))
+
+    ;; missing -p
+    (check-error (parse-arguments (vector "-s" "images/10x30-red.jpg" "images/30x30-black.png")))
+    ;; missing -s
+    (check-error (parse-arguments (vector "images/10x30-red.jpg" "-p" "images/30x30-black.png")))
+
+    ;; missing pattern filename
+    (check-error (parse-arguments (vector "-s" "images/10x30-red.jpg" "-p")))
+    ;; missing source filename
+    (check-error (parse-arguments (vector "-s" "-p" "images/30x30-black.png")))
+    ;; missing both filenames
+    (check-error (parse-arguments (vector "-s" "-p")))
+
+    ;; missing source
+    (check-error (parse-arguments (vector "-p" "images/30x30-black.png")))
+    ;; missing pattern
+    (check-error (parse-arguments (vector "-s" "images/10x30-red.jpg")))
+
+    ;; no arguments
+    (check-error (parse-arguments (vector)))
+    ;; bogus extra flag
+    (check-error (parse-arguments (vector "-s" "images/10x30-red.jpg" "-p" "images/30x30-black.png" "-b")))
+    ;; bogus extra non-flag argument
+    (check-error (parse-arguments (vector "-s" "images/10x30-red.jpg" "-p" "images/30x30-black.png" "bogus"))))))

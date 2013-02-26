@@ -13,12 +13,8 @@
 ;; loading.
 
 
-;; load-image-file : String -> ImageBitmap
+;; load-image-file : Path -> ImageBitmap
 (define (load-image-file filename)
-  (unless (file-exists? filename)
-    (error 'load-image-file
-           (format "The file ~a does not exist!" filename)))
-
   (let ((bitmap-object (filename->bitmap% filename)))
     (if bitmap-object
         (let-values (((image-bytes width height)
@@ -28,7 +24,7 @@
                (format "The file ~a does not contain an image in a valid format!"
                        filename)))))
 
-;; filename->bitmap% : String -> (U False bitmap%)
+;; filename->bitmap% : Path -> (U False bitmap%)
 ;;
 ;; loads the file into a bitmap object, or, if that fails, returns false
 (define (filename->bitmap% filename)
