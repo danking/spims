@@ -31,14 +31,26 @@
                                 pattern-filename
                                 source-filename))))
 
+(define (error-display-handler-no-stack-trace message exn)
+  (printf "spims: ~a\n" message))
+(define regular-error-display-handler (error-display-handler))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; executed section
 
-(let-values (((pattern-filenames source-filenames debug-setting)
-              (parse-arguments (current-command-line-arguments))))
-  (parameterize ([debug debug-setting])
-    (for* ((pattern-filename pattern-filenames)
-           (source-filename source-filenames))
-      (print-matches
-       (image-filepath-pair->matches pattern-filename
-                                     source-filename)))))
+(parameterize
+    ;; assume we're in debug mode.
+    ([error-display-handler error-display-handler-no-stack-trace])
+  (let-values (((pattern-filenames source-filenames debug-setting)
+                (parse-arguments (current-command-line-arguments))))
+    (parameterize
+        ([debug debug-setting]
+         ;; if we really are in debug mode, switch to a normal error reporter
+         [error-display-handler (if debug
+                                    regular-error-display-handler
+                                    error-display-handler-no-stack-trace)])
+      (for* ((pattern-filename pattern-filenames)
+             (source-filename source-filenames))
+            (print-matches
+             (image-filepath-pair->matches pattern-filename
+                                           source-filename))))))
