@@ -27,15 +27,29 @@
 
 
 (define (duplicate? m1 m2)
-  (and (same-images m1 m2)
-       (< (- (match-x m1) (match-x m2)) 5)
-       (< (- (match-y m1) (match-y m2)) 5)
-       (< (- (match-m1 m1) (match-m1 m2)) 5)
-       (< (- (match-n1 m1) (match-n1 m2)) 5)))
+  (if (and (same-images m1 m2)
+           (same-size m1 m2))
+      (same-loc m1 m2)
+      #f))
+
 
 (define (same-images m1 m2)
   (and (string=? (get-path-filename (match-pattern-img m1)) (get-path-filename  (match-pattern-img m2)))
        (string=? (get-path-filename (match-source-img m1)) (get-path-filename  (match-source-img m2)))))
+ 
+
+(define (same-size m1 m2)
+  (and (< (- (match-m1 m1) (match-m1 m2)) 3)
+       (< (- (match-n1 m1) (match-n1 m2)) 3)))
+  
+
+(define (same-loc m1 m2)
+  (< (sqrt (+ (exp (- (match-x m1) (match-x m2)) 2)
+              (exp (- (match-y m1) (match-y m2)) 2)))
+     (/ (sqrt (+ (exp (* 2 (match-m1 m1)) 2)
+                 (exp (* 2 (match-n1 m1)) 2)))
+        50)))
+
 
 ;(define (structure-by-image results prev-pattern prev-source)
 ;  (cond [(empty? results) empty]
