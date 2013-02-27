@@ -46,8 +46,8 @@
 (define (same-loc m1 m2)
   (< (sqrt (+ (exp (- (match-x m1) (match-x m2)) 2)
               (exp (- (match-y m1) (match-y m2)) 2)))
-     (/ (sqrt (+ (exp (* 2 (match-m1 m1)) 2)
-                 (exp (* 2 (match-n1 m1)) 2)))
+     (/ (sqrt (+ (expt (* 2 (match-m1 m1)) 2)
+                 (expt (* 2 (match-n1 m1)) 2)))
         50)))
 
 
