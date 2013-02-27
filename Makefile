@@ -13,7 +13,7 @@ all:
 byte-compile:
 	@$(SPIMS_COMPILE) $(SPIMS_ENTRY_POINT)
 
-test:
+test: all
 	@cd tests && $(SPIMS_RACKET) run-all-tests.rkt; cd ..
 
 package:
