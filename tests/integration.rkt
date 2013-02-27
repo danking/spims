@@ -17,6 +17,10 @@
       (close-input-port stderr)
       (values match-strings-set errors))))
 
+;; alphabetically-sort-matches-set : [Set String] -> [Listof String]
+(define (alphabetically-sort-matches-set matches-set)
+  (sort (set->list matches-set) string<?))
+
 (define-check (spims-matches-check invocation expected)
   (displayln invocation)
   (let-values (((actual errors) (run-spims invocation)))
@@ -30,8 +34,12 @@
                "lists those results which appear in the actual results but "
                "were not expected.  Expected lists those matches that were "
                "expected, but not found in actual output."))
-             (make-check-actual (set-subtract actual expected))
-             (make-check-expected (set-subtract expected actual)))
+             (make-check-actual
+              (alphabetically-sort-matches-set
+               (set-subtract actual expected)))
+             (make-check-expected
+              (alphabetically-sort-matches-set
+               (set-subtract expected actual))))
        (lambda () (fail-check))))))
 
 (define integration-tests
