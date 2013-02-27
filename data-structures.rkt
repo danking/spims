@@ -1,6 +1,7 @@
 #lang typed/racket
 
-(provide (struct-out pixel) (struct-out match)
+(provide ;; (struct-out pixel)
+         (struct-out match)
          get-pixel-at bitmap-width bitmap-height
          create-bitmap pixels-match-with-tolerance? get-diff-sum
          match-pixel-distance
@@ -17,7 +18,13 @@
 ;; at most 8 bytes of data.
 ;;
 ;; (pixel Number Number Number Number)
-(struct: pixel ([red : Number] [green : Number] [blue : Number]) #:transparent)
+
+(struct: pixel ([red : Integer]
+                [green : Integer]
+                [blue : Integer])
+         #:transparent)
+
+(define-type ImageBitmap (Vectorof (Vectorof pixel)))
 
 ;; An ImageBitmap is a [Vector [Vector Pixel]]
 ;; To get the element in the i-th row and the j-th column we execute:
@@ -33,17 +40,17 @@
 ;; However, the vector-ref procedure shouldn't be used directly.
 
 ;; get-pixel-at : ImageBitmap Number Number -> Pixel
-(: get-pixel-at : (Vector (Vector pixel)) Number Number -> pixel)
+(: get-pixel-at : ImageBitmap Integer Integer -> pixel)
 (define (get-pixel-at bitmap row column)
   (vector-ref (vector-ref bitmap row) column))
 
 ;; bitmap-height : ImageBitmap -> Number
-(: bitmap-height : (Vector (Vector pixel)) -> Number)
+(: bitmap-height : ImageBitmap -> Integer)
 (define (bitmap-height bitmap)
   (vector-length bitmap))
 
 ;; bitmap-width : ImageBitmap -> Number
-(: bitmap-width : (Vector (Vector pixel)) -> Number)
+(: bitmap-width : ImageBitmap -> Integer)
 (define (bitmap-width bitmap)
   (if (> (bitmap-height bitmap) 0)
       (vector-length (vector-ref bitmap 0))
@@ -59,19 +66,28 @@
 ;; N.B. racket/draw already has make-bitmap which works with racket's
 ;; representation of bitmaps; therefore, we must use a different identifier
 ;; name.
-(: create-bitmap : Number Number (Number Number -> pixel) -> (Vector (Vector pixel)))
+(: create-bitmap : Integer Integer (Integer Integer -> pixel)
+   -> ImageBitmap)
 (define (create-bitmap width height generator)
-  (for/vector ((y (in-range height)))
-    (for/vector ((x (in-range width)))
+  (for/vector: : ImageBitmap ((y : Integer (in-range height)))
+    (for/vector: : (Vectorof pixel) ((x : Integer (in-range width)))
       (generator x y))))
 
-(define debug (make-parameter #f))
-(define biggest-diff (make-parameter 0))
+(define: debug : (Parameterof Boolean)
+  (make-parameter #f))
+(define: biggest-diff : (Parameterof Real)
+  (make-parameter 0))
 
-;; pixels-match-with-tolerance? ImageBitmap ImageBitmap Number Number Number Number -> Boolean
+;; pixels-match-with-tolerance? ImageBitmap ImageBitmap
+;;                              Number Number Number Number
+;;                              -> Boolean
 ;;
-;; Compares the tolerance global to the sum of the differences of P and T's pixel color components
-(: pixels-match-with-tolerance? : (Vector (Vector pixel)) (Vector (Vector pixel)) Number Number Number Number Number -> Boolean)
+;; Compares the tolerance global to the sum of the differences of P and T's
+;; pixel color components
+(: pixels-match-with-tolerance? :
+   ImageBitmap ImageBitmap
+   Integer Integer Integer Integer Real
+   -> Boolean)
 (define (pixels-match-with-tolerance? p t px py tx ty tolerance)
   (let* ([p-pixel (get-pixel-at p py px)]
          [t-pixel (get-pixel-at t ty tx)]
@@ -84,7 +100,7 @@
 ;; get-diff-sum pixel pixel -> Number
 ;;
 ;; Computes the Sum of absolute difference value for two pixels
-(: get-diff-sum : pixel pixel -> Number)
+(: get-diff-sum : pixel pixel -> Real)
 (define (get-diff-sum pixel1 pixel2)
   (+ (abs (- (pixel-red pixel1) (pixel-red pixel2)))
      (abs (- (pixel-green pixel1) (pixel-green pixel2)))
@@ -110,7 +126,12 @@
 ;;  - y is the vertical offset of the top left corner of that subimage from the
 ;;    top left corner of the source image
 
-(struct: match ([pattern-img : String] [source-img : String] [m1 : Number] [n1 : Number] [x : Number] [y : Number]))
+(struct: match ([pattern-img : String]
+                [source-img : String]
+                [m1 : Number]
+                [n1 : Number]
+                [x : Number]
+                [y : Number]))
 
 (: match-pixel-distance : match match -> Number)
 (define (match-pixel-distance m1 m2)
