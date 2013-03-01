@@ -4,6 +4,12 @@
 
 (provide print-match print-matches)
 
+(define LOWER-SIZE-TOLERANCE 1.2)   ;; Used when we have scaling
+(define UPPER-SIZE-TOLERANCE .8)    ;; Used when we have scaling
+(define LOCATION-INTOLERANCE 15)
+(define (pythagorean a b)
+  (sqrt (+ (expt a 2) (expt b 2))))
+
 (define (print-match result)
   (display (string-append
             (get-path-filename (match-pattern-img result))
@@ -37,26 +43,19 @@
        (string=? (get-path-filename (match-source-img m1)) (get-path-filename  (match-source-img m2)))))
 
 
-(define (same-size m1 m2)
-  (and (< (- (match-m1 m1) (match-m1 m2)) 3)
-       (< (- (match-n1 m1) (match-n1 m2)) 3)))
-
-
+(define (same-size m1 m2) #t)
+#| We aren't going to need this until scaling starts giving us different size matches
+  (define size ratio (/ (* (match-m1 m1) (match-n1 m1))
+                        (* (match-m1 m2) (match-n1 m2))))
+  (and (< ratio UPPER-SIZE-TOLERANCE)
+       (> ratio LOWER-SIZE-TOLERANCE)))|#
+  
 (define (same-loc m1 m2)
-  (< (sqrt (+ (expt (- (match-x m1) (match-x m2)) 2)
-              (expt (- (match-y m1) (match-y m2)) 2)))
-     (/ (sqrt (+ (expt (* 2 (match-m1 m1)) 2)
-                 (expt (* 2 (match-n1 m1)) 2)))
-        50)))
-
-
-;(define (structure-by-image results prev-pattern prev-source)
-;  (cond [(empty? results) empty]
-;        [(= ((first results)cons (filter results
-
-
-;(define (filter-matches results)
-;  (for-each organized-filter (structure-by-image results "" "")))
+  (< (pythagorean (- (match-x m1) (match-x m2))
+                  (- (match-y m1) (match-y m2)))
+     (/ (pythagorean (match-m1 m1)
+                     (match-n1 m1))
+        LOCATION-INTOLERANCE)))
 
 (define (simple-filter results)
   (reverse (foldl (lambda (x lst) (cons x (filter-not (curry duplicate? x) lst))) '() results)))
