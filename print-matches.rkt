@@ -27,10 +27,9 @@
 
 
 (define (duplicate? m1 m2)
-  (if (and (same-images m1 m2)
-           (same-size m1 m2))
-      (same-loc m1 m2)
-      #f))
+  (and (same-images m1 m2)
+       (same-size m1 m2)
+       (same-loc m1 m2)))
 
 
 (define (same-images m1 m2)
@@ -59,15 +58,8 @@
 ;(define (filter-matches results)
 ;  (for-each organized-filter (structure-by-image results "" "")))
 
-
-
 (define (simple-filter results)
-  (cond [(empty? results) empty]
-        [(empty? (rest results)) results]
-        [else (define r1 (first results))
-              (define (f x) (not (duplicate? r1 x)))
-              (cons r1 (simple-filter (filter f (rest results))))]))
+  (reverse (foldl (lambda (x lst) (cons x (filter-not (curry duplicate? x) lst))) '() results)))
 
 (define (print-matches results)
-  (define filtered-results (simple-filter results))
-  (for-each print-match filtered-results))
+  (for-each print-match (simple-filter results)))
