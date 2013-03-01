@@ -36,12 +36,12 @@
 (define (same-images m1 m2)
   (and (string=? (get-path-filename (match-pattern-img m1)) (get-path-filename  (match-pattern-img m2)))
        (string=? (get-path-filename (match-source-img m1)) (get-path-filename  (match-source-img m2)))))
- 
+
 
 (define (same-size m1 m2)
   (and (< (- (match-m1 m1) (match-m1 m2)) 3)
        (< (- (match-n1 m1) (match-n1 m2)) 3)))
-  
+
 
 (define (same-loc m1 m2)
   (< (sqrt (+ (exp (- (match-x m1) (match-x m2)) 2)
