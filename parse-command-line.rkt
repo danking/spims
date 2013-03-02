@@ -23,7 +23,7 @@
   (let ((pattern-image-filenames '())
         (source-image-filenames '())
         (debug #f)
-        (tolerance 44))
+        (tolerance 26))
     ;; This expression returns (void) because there is no #:args clause. A #:args
     ;; clause could be used to parse arguments which succeed the regular, flagged
     ;; arguments.
