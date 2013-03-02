@@ -115,7 +115,7 @@
 (struct match (pattern-img source-img m1 n1 x y avg-diff))
 
 ;; a pre-match is a match struct with some missing information
-(struct pre-match (x y avg-diff))
+(struct pre-match (x y avg-diff) #:transparent)
 
 (define (match-pixel-distance m1 m2)
   (sqrt (+ (sqr (- (match-x m1) (match-x m2)))
