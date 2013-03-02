@@ -61,12 +61,10 @@
         LOCATION-INTOLERANCE)))
 
 (define (simple-filter results)
-  ;; (reverse (foldl (lambda (x lst)
-  ;;                   (cons x (filter-not (curry duplicate? x) lst)))
-  ;;                 '()
-  ;;                 results))
-  results
-  )
+  (reverse (foldl (lambda (x lst)
+                    (cons x (filter-not (curry duplicate? x) lst)))
+                  '()
+                  results)))
 
 (define (print-matches results)
   (for-each print-match (simple-filter results)))
