@@ -22,13 +22,41 @@ murray.mich@husky.neu.edu
 Our project can be compiled by simply entering 'make' in the
 root directory of our project on any CCIS Linux machine. This
 will automatically create an executable called 'spims' which
-can be invoked exactly as shown on the Assignment 4 page:
-http://www.ccs.neu.edu/course/cs4500wc/assignment4.txt
+can be invoked exactly as shown on the Assignment 5 page:
+http://www.ccs.neu.edu/course/cs4500wc/assignment5.txt
+
+For each invocation of spims, a pattern and a source must be
+specified. The pattern and source can either be single images
+or directories containing only image files at the top level.
 
 For example:
 
 ./spims -p /course/cs4500wc/Assignments/A4/Patterns/black.jpg \
         -s /course/cs4500wc/Assignments/A4/Sources/bb0001.jpg
+
+...specifies that the program be run on a single pattern image
+and a single source image...
+
+
+./spims -pdir /course/cs4500wc/Assignments/A5/Patterns \
+        -s /course/cs4500wc/Assignments/A5/Sources/greenish.png
+
+...specifies that the program be run on a directory of pattern
+images and a single source image...
+
+
+./spims -p /course/cs4500wc/Assignments/A5/Patterns/green23.png \
+        -sdir /course/cs4500wc/Assignments/A4/Sources
+
+...specifies that the program be run on a single pattern image
+and a directory of source images...
+
+
+./spims -pdir /course/cs4500wc/Assignments/A5/Patterns \
+        -sdir /course/cs4500wc/Assignments/A4/Sources
+
+...specifies that the program be run on a directory of pattern
+images and a directory or source images.
 
 
 ## External Software Used ##
