@@ -52,7 +52,7 @@
                         (* (match-m1 m2) (match-n1 m2))))
   (and (< ratio UPPER-SIZE-TOLERANCE)
        (> ratio LOWER-SIZE-TOLERANCE)))|#
-  
+
 (define (same-loc m1 m2)
   (< (pythagorean (- (match-x m1) (match-x m2))
                   (- (match-y m1) (match-y m2)))
