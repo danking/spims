@@ -22,7 +22,8 @@
 (define (parse-arguments arguments)
   (let ((pattern-image-filenames '())
         (source-image-filenames '())
-        (debug #f))
+        (debug #f)
+        (tolerance 125))
     ;; This expression returns (void) because there is no #:args clause. A #:args
     ;; clause could be used to parse arguments which succeed the regular, flagged
     ;; arguments.
@@ -58,7 +59,9 @@
                   ;; debug flag
                   #:once-each
                   [("-d" "--debug") "increased debug output"
-                   (set! debug #t)])
+                   (set! debug #t)]
+                  ["--tolerance" t "the average pixel difference tolerance"
+                   (set! tolerance (string->number t))])
     ;; verify that the necessary arguments were passed
     (when (empty? source-image-filenames)
       (error 'parse-arguments
@@ -68,7 +71,7 @@
              "You must specify at least one pattern image (is the directory empty?) -- see 'spims -h' for help."))
     ;; this returns two values, you can use a (let-values (((a b) ...) ...) ...)
     ;; form to capture these values
-    (values pattern-image-filenames source-image-filenames debug)))
+    (values pattern-image-filenames source-image-filenames debug tolerance)))
 
 
 ;; fix-args : [Vector String] -> [Vector String]
