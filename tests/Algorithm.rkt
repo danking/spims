@@ -92,9 +92,9 @@
         find-pattern-in-source (list 1x1red 5x5red)
         (for*/list ((x (in-range 0 5))
                     (y (in-range 0 5)))
-          (list x y))
+          (pre-match x y 0))
         max-running-time)
       (check-time<= "5x5 green with 5x5 green"
-        find-pattern-in-source (list 5x5green 5x5green) '((0 0)) max-running-time)
+        find-pattern-in-source (list 5x5green 5x5green) `(,(pre-match 0 0 0)) max-running-time)
       (check-time<= "1x1 blue with 1x1 blue"
-        find-pattern-in-source (list 1x1blue 1x1blue) '((0 0)) max-running-time)))))
+        find-pattern-in-source (list 1x1blue 1x1blue) `(,(pre-match 0 0 0)) max-running-time)))))
