@@ -50,7 +50,7 @@
                                                    pattern source
                                                    average-difference-tolerance)
   (define (tolerable-average? average)
-    (< average average-difference-tolerance))
+    (<= average average-difference-tolerance))
   (define pattern-size (* (bitmap-width pattern)
                           (bitmap-height pattern)))
   (let ((difference
