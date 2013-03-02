@@ -6,30 +6,35 @@
          "Algorithm.rkt"
          "print-matches.rkt")
 
-(define TOLERANCE 125)
-
-;; match-coordinates->match : [List Number Number] Number Number String String
-(define (match-coordinates->match match-coordinate match-width match-height pattern-filename source-filename)
-  (let ((x (first match-coordinate))
-        (y (second match-coordinate)))
+;; match-coordinates->match : PreMatch
+;;                            Number Number
+;;                            String String
+;;                            ->
+;;                            Match
+(define (pre-match->match pre-match match-width match-height
+                          pattern-filename source-filename)
+  (let ((x (pre-match-x pre-match))
+        (y (pre-match-y pre-match))
+        (avg-diff (pre-match-avg-diff pre-match)))
     (match pattern-filename source-filename
            match-width match-height
-           x y)))
+           x y avg-diff)))
 
-;; image-filepath-pair->matches : String String -> [ListOf Match]
-(define (image-filepath-pair->matches pattern-filename source-filename)
+;; image-filepath-pair->matches : String String Number -> [ListOf Match]
+(define (image-filepath-pair->matches pattern-filename source-filename tolerance)
   (let ((pattern-image (load-image-file pattern-filename))
         (source-image (load-image-file source-filename)))
 
-    (for/list ((match-coordinate (find-pattern-in-source/tolerance pattern-image
-                                                                   source-image
-                                                                   TOLERANCE)))
+    (for/list ((pre-match
+                (find-pattern-in-source/tolerance pattern-image
+                                                  source-image
+                                                  tolerance)))
 
-      (match-coordinates->match match-coordinate
-                                (bitmap-width pattern-image)
-                                (bitmap-height pattern-image)
-                                pattern-filename
-                                source-filename))))
+      (pre-match->match pre-match
+                        (bitmap-width pattern-image)
+                        (bitmap-height pattern-image)
+                        pattern-filename
+                        source-filename))))
 
 (define (error-display-handler-no-stack-trace message exn)
   (printf "spims: ~a\n" message))
@@ -41,7 +46,7 @@
 (parameterize
     ;; assume we're in debug mode.
     ([error-display-handler error-display-handler-no-stack-trace])
-  (let-values (((pattern-filenames source-filenames debug-setting)
+  (let-values (((pattern-filenames source-filenames debug-setting tolerance)
                 (parse-arguments (current-command-line-arguments))))
     (parameterize
         ([debug debug-setting]
@@ -51,6 +56,8 @@
                                     error-display-handler-no-stack-trace)])
       (for* ((pattern-filename pattern-filenames)
              (source-filename source-filenames))
-            (print-matches
-             (image-filepath-pair->matches pattern-filename
-                                           source-filename))))))
+        (when (debug) (printf "looking at: ~a\n" source-filename))
+        (print-matches
+         (image-filepath-pair->matches pattern-filename
+                                       source-filename
+                                       tolerance))))))

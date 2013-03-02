@@ -1,8 +1,9 @@
 #lang racket
 
-(provide (struct-out pixel) (struct-out match)
+(provide (struct-out pixel) (struct-out match) (struct-out pre-match)
          get-pixel-at bitmap-width bitmap-height
-         create-bitmap pixels-match-with-tolerance? get-diff-sum
+         create-bitmap pixels-match-with-tolerance?
+         pixel-difference-in-bitmap-at get-diff-sum
          match-pixel-distance
          ;; parameters
          debug biggest-diff)
@@ -68,13 +69,18 @@
 ;;
 ;; Compares the tolerance global to the sum of the differences of P and T's pixel color components
 (define (pixels-match-with-tolerance? p t px py tx ty tolerance)
-  (let* ([p-pixel (get-pixel-at p py px)]
-         [t-pixel (get-pixel-at t ty tx)]
-         [difference (get-diff-sum p-pixel t-pixel)]
+  (let* ([difference (pixel-difference-in-bitmap-at p t px py tx ty)]
          [tolerable? (<= difference tolerance)])
     (when (and (debug) tolerable?)
       (biggest-diff difference))
     tolerable?))
+
+(define (pixel-difference-in-bitmap-at pattern source
+                                       pattern-x pattern-y
+                                       source-x source-y)
+  (let* ([p-pixel (get-pixel-at pattern pattern-y pattern-x)]
+         [t-pixel (get-pixel-at source source-y source-x)])
+    (get-diff-sum p-pixel t-pixel)))
 
 ;; get-diff-sum pixel pixel -> Number
 ;;
@@ -85,7 +91,7 @@
      (abs (- (pixel-blue pixel1) (pixel-blue pixel2)))))
 
 ;; a Match is a
-;;   (match String String Number Number Number Number)
+;;   (match String String Number Number Number Number Number)
 ;; where the fields:
 ;;
 ;;  - pattern-img is the pattern image's filename
@@ -103,8 +109,13 @@
 ;;
 ;;  - y is the vertical offset of the top left corner of that subimage from the
 ;;    top left corner of the source image
+;;
+;;  - avg-diff is the average pixel difference in this match
+;;
+(struct match (pattern-img source-img m1 n1 x y avg-diff))
 
-(struct match (pattern-img source-img m1 n1 x y))
+;; a pre-match is a match struct with some missing information
+(struct pre-match (x y avg-diff))
 
 (define (match-pixel-distance m1 m2)
   (sqrt (+ (sqr (- (match-x m1) (match-x m2)))
