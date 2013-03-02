@@ -51,7 +51,7 @@
     (parameterize
         ([debug debug-setting]
          ;; if we really are in debug mode, switch to a normal error reporter
-         [error-display-handler (if debug
+         [error-display-handler (if (debug)
                                     regular-error-display-handler
                                     error-display-handler-no-stack-trace)])
       (for* ((pattern-filename pattern-filenames)
