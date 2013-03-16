@@ -1,6 +1,6 @@
 #lang typed/racket
 
-(provide ;; (struct-out pixel)
+(provide (struct-out pixel)
          (struct-out match)
          get-pixel-at bitmap-width bitmap-height
          create-bitmap pixels-match-with-tolerance? get-diff-sum
