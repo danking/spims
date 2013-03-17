@@ -6,7 +6,7 @@
 
 (provide parse-command-line-tests)
 
-(define default-tolerance 10)
+(define default-tolerance 26)
 
 (define parse-command-line-tests
   (test-suite
