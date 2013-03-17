@@ -1,7 +1,6 @@
 #lang racket
 
 (require "data-structures.rkt"
-         "2htdp-compatibility.rkt"
          2htdp/image)
 
 (provide find-pattern-in-source find-pattern-in-source/tolerance)
