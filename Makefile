@@ -16,6 +16,9 @@ byte-compile:
 test: all
 	@cd tests && $(SPIMS_RACKET) run-all-tests.rkt; cd ..
 
+fast-test: all
+	@cd tests && $(SPIMS_RACKET) run-all-tests.rkt fast; cd ..
+
 package:
 	$(eval $@_TMP := $(shell mktemp -d))
 	$(eval $@_ZIP_DIR := $($@_TMP)/spims)

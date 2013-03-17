@@ -20,12 +20,14 @@
          "Algorithm.rkt"
          "integration.rkt")
 
-(run-tests (test-suite "all-tests"
+(run-tests (test-suite "quick-tests"
                        parse-command-line-tests
                        load-image-file-tests
                        data-transformers-tests
-                       algorithm-tests
-                       integration-tests))
+                       algorithm-tests))
 
-
-
+(let ((argv (current-command-line-arguments)))
+  (unless (and (= (vector-length argv) 1)
+               (equal? (vector-ref argv 0)
+                       "fast"))
+      (run-tests integration-tests)))
