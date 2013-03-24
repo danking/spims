@@ -1,6 +1,7 @@
 #lang racket
 
-(require "data-structures.rkt")
+(require math/matrix
+         "data-structures.rkt")
 
 (provide map-bitmap fold-bitmap)
 
@@ -9,15 +10,11 @@
 ;;
 ;; Procedures to do iteration or recursion over the data structures.
 
-;; map-bitmap : [Pixel Number Number -> Pixel] ImageBitmap -> ImageBitmap
+;; map-bitmap : [Pixel -> Pixel] ImageBitmap -> ImageBitmap
 ;;
-;; A map procedure for the ImageBitmap datatype. The transformer should expect
-;; the x and y coordinates of the pixel as the second and third arguments,
-;; respectively.
+;; A map procedure for the ImageBitmap datatype.
 (define (map-bitmap transformer bitmap)
-  (for/vector (((row y) (in-indexed bitmap)))
-    (for/vector (((element x) (in-indexed row)))
-      (transformer element x y))))
+  (matrix-map transformer bitmap))
 
 ;; fold-bitmap : ∀TYPE1, TYPE2.
 ;;                    [Pixel Number Number TYPE1 -> TYPE1]

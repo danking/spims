@@ -9,37 +9,29 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; tests/load-iamge-file.rkt
 
-;; A bunch of color and vector building blocks for testing
+;; A bunch of color and matrix building blocks for testing
 
-(define blue (pixel 0 0 255))
-(define red (pixel 255 0 0))
-(define green (pixel 0 255 0))
-
-(define blue-vector (vector blue blue blue blue blue))
-(define green-vector (vector green green green green green))
-(define red-vector (vector red red red red red))
-
-(define 20-red-vector (vector-append red-vector red-vector red-vector red-vector))
-(define 20-green-vector (vector-append green-vector green-vector green-vector green-vector))
-(define 20-blue-vector (vector-append blue-vector blue-vector blue-vector blue-vector))
+(define (blue i j) (pixel 0 0 255))
+(define (red i j) (pixel 255 0 0))
+(define (green i j) (pixel 0 255 0))
 
 (define 1x1red
-  (vector (vector red)))
+  (create-bitmap 1 1 red))
 
 (define 1x1green
-  (vector (vector green)))
+  (create-bitmap 1 1 green))
 
 (define 1x1blue
-  (vector (vector blue)))
+  (create-bitmap 1 1 blue))
 
 (define 5x5red
-  (vector red-vector red-vector red-vector red-vector red-vector))
-
-(define 5x5blue
-  (vector blue-vector blue-vector blue-vector blue-vector blue-vector))
+  (create-bitmap 5 5 red))
 
 (define 5x5green
-  (vector green-vector green-vector green-vector green-vector green-vector))
+  (create-bitmap 5 5 green))
+
+(define 5x5blue
+  (create-bitmap 5 5 blue))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; testing procedures
@@ -75,8 +67,6 @@
    "Tests for Algorithm.rkt"
 
    ;; Some tests
-
-   ;; Currently working on the vector-ref error... :/
 
    (test-suite
     "timing tests"

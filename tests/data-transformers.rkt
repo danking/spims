@@ -18,11 +18,11 @@
     "map-bitmap"
 
     (test-equal? "red to green"
-                 (map-bitmap (lambda (p x y) (pixel 0 255 0))
+                 (map-bitmap (lambda (p) (pixel 0 255 0))
                              (create-bitmap 10 10 (lambda (i j) (pixel 255 0 0))))
                  (create-bitmap 10 10 (lambda (i j) (pixel 0 255 0))))
     (test-equal? "inversion"
-                 (map-bitmap (lambda (p x y) (pixel (- 255 (pixel-red p)) 0 0))
+                 (map-bitmap (lambda (p) (pixel (- 255 (pixel-red p)) 0 0))
                              (create-bitmap 10 10 (lambda (i j) (pixel i 0 0))))
                  (create-bitmap 10 10 (lambda (i j) (pixel (- 255 i) 0 0)))))
 

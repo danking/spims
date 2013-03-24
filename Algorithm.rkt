@@ -5,11 +5,11 @@
 
 (provide find-pattern-in-source find-pattern-in-source/tolerance)
 
-;; find-pattern-in-source: [Vector [Vector Pixel]]
-;;                         [Vector [Vector Pixel]]
+;; find-pattern-in-source: [Matrix Pixel]
+;;                         [Matrix Pixel]
 ;;                         ->
 ;;                         [Listof [List Number Number]]
-;; Match takes a pattern (p) and target (t) vector of vectors of pixels and
+;; Match takes a pattern (p) and target (t) matrices of pixels and
 ;; produces a list of pairs representing the X and Y coordinates of all possible
 ;; matching coordinates
 (define (find-pattern-in-source pattern source)
