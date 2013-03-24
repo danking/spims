@@ -93,7 +93,7 @@
 ;;
 ;; Converts a byte-array into a matrix of pixel structures. Note that
 ;; the width and height here are the image's pixel-width and pixel-height.
-(define (bytes->pixel-matrix bytes width height)
+(define (bytes->pixel-matrix bytes height width)
   (let ((M (for*/matrix height width
               ([row (in-range height)]
                [column (in-range width)])
