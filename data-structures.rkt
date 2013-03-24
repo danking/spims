@@ -8,6 +8,9 @@
          ;; parameters
          debug biggest-diff)
 
+(require math/array
+         math/matrix)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; data-structures.rkt
 ;;
@@ -20,32 +23,24 @@
 ;; (pixel Number Number Number Number)
 (struct pixel (red green blue) #:transparent)
 
-;; An ImageBitmap is a [Vector [Vector Pixel]]
+;; An ImageBitmap is a [Matrix Pixel]
 ;; To get the element in the i-th row and the j-th column we execute:
 ;;
-;;   (vector-ref (vector-ref bitmap i) j)
+;;   (array-ref bitmap #(i j))
 ;;
-;; in pieces, this is:
-;;
-;;   (let* ((ith-row (vector-ref bitmap i))
-;;          (jth-column-of-ith-row (vector-ref ith-row j)))
-;;     jth-column-of-ith-row)
-;;
-;; However, the vector-ref procedure shouldn't be used directly.
+;; However, the array-ref procedure shouldn't be used directly.
 
 ;; get-pixel-at : ImageBitmap Number Number -> Pixel
 (define (get-pixel-at bitmap row column)
-  (vector-ref (vector-ref bitmap row) column))
+  (array-ref bitmap (vector row column)))
 
 ;; bitmap-height : ImageBitmap -> Number
 (define (bitmap-height bitmap)
-  (vector-length bitmap))
+  (matrix-num-rows bitmap))
 
 ;; bitmap-width : ImageBitmap -> Number
 (define (bitmap-width bitmap)
-  (if (> (bitmap-height bitmap) 0)
-      (vector-length (vector-ref bitmap 0))
-      0))
+  (matrix-num-cols bitmap))
 
 ;; create-bitmap : Number Number [Number Number -> Pixel] -> ImageBitmap
 ;;
@@ -58,9 +53,7 @@
 ;; representation of bitmaps; therefore, we must use a different identifier
 ;; name.
 (define (create-bitmap width height generator)
-  (for/vector ((y (in-range height)))
-    (for/vector ((x (in-range width)))
-      (generator x y))))
+  (build-matrix width height generator))
 
 (define debug (make-parameter #f))
 (define biggest-diff (make-parameter 0))

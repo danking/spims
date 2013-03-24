@@ -1,6 +1,7 @@
 #lang racket
 
 (require racket/draw
+         math/matrix
          "data-structures.rkt")
 
 (provide load-image-file)
@@ -90,12 +91,11 @@
 
 ;; bytes->pixel-matrix : Bytes Number Number
 ;;
-;; Converts a byte-array into a vector of vector of pixel structures. Note that
+;; Converts a byte-array into a matrix of pixel structures. Note that
 ;; the width and height here are the image's pixel-width and pixel-height.
 (define (bytes->pixel-matrix bytes width height)
-  (for/vector #:length height
-              ([row (in-range height)])
-    (for/vector #:length width
-                ([column (in-range width)])
-      (let-values (((red green blue) (get-rgb-at bytes width row column)))
-        (pixel red green blue)))))
+  (for*/matrix height width
+              ([row (in-range height)]
+               [column (in-range width)])
+    (let-values (((red green blue) (get-rgb-at bytes width row column)))
+      (pixel red green blue))))
