@@ -94,8 +94,9 @@
 ;; Converts a byte-array into a matrix of pixel structures. Note that
 ;; the width and height here are the image's pixel-width and pixel-height.
 (define (bytes->pixel-matrix bytes width height)
-  (for*/matrix height width
+  (let ((M (for*/matrix height width
               ([row (in-range height)]
                [column (in-range width)])
     (let-values (((red green blue) (get-rgb-at bytes width row column)))
-      (pixel red green blue))))
+      (pixel red green blue)))))
+    (build-matrix height width (lambda (i j) (matrix-ref M i j)))))
