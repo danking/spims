@@ -33,11 +33,11 @@
      "compute pixel averages"
 
      ;; accumulate a triplet of the sums of the red, green, and blue channels
-     (define (sum-pixels p x y sum)
+     (define (sum-pixels p sum)
        (map +
             (list (pixel-red p) (pixel-green p) (pixel-blue p))
             sum))
-     (define (sum-rows row x sum)
+     (define (sum-rows row sum)
        (map + row sum))
      (define (pixel-averages bitmap)
        (map /
