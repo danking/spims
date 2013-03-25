@@ -1,6 +1,7 @@
 #lang racket
 
-(require math/matrix
+(require math/array
+         math/matrix
          "data-structures.rkt")
 
 (provide map-bitmap fold-bitmap)
@@ -17,8 +18,8 @@
   (matrix-map transformer bitmap))
 
 ;; fold-bitmap : ∀TYPE1, TYPE2.
-;;                    [Pixel Number Number TYPE1 -> TYPE1]
-;;                    [TYPE1 Number TYPE2 -> TYPE2]
+;;                    [Pixel TYPE1 -> TYPE1]
+;;                    [TYPE1 TYPE2 -> TYPE2]
 ;;                    TYPE1
 ;;                    TYPE2
 ;;                    ImageBitmap
@@ -39,10 +40,9 @@
                      pixel-base row-base
                      bitmap)
   (for/fold ((row-accumulator row-base))
-            (((row y) (in-indexed bitmap)))
+            ((row (in-array-axis bitmap)))
     (row-transformer (for/fold ((pixel-accumulator pixel-base))
-                               (((pixel x) (in-indexed row)))
-                       (pixel-transformer pixel x y pixel-accumulator))
-                     y
+                               ((pixel (in-array row)))
+                       (pixel-transformer pixel pixel-accumulator))
                      row-accumulator)))
 
