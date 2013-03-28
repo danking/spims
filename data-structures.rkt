@@ -3,7 +3,7 @@
 (provide (struct-out pixel) (struct-out match) (struct-out pre-match)
          get-pixel-at bitmap-width bitmap-height
          create-bitmap pixels-match-with-tolerance?
-         pixel-difference-in-bitmap-at get-diff-sum
+         pixel-difference-in-bitmap-at get-diff-sum pixel-euclidean-distance
          match-pixel-distance
          ;; parameters
          debug biggest-diff)
@@ -82,6 +82,14 @@
   (+ (abs (- (pixel-red pixel1) (pixel-red pixel2)))
      (abs (- (pixel-green pixel1) (pixel-green pixel2)))
      (abs (- (pixel-blue pixel1) (pixel-blue pixel2)))))
+
+;; pixel-euclidean-distance pixel pixel -> Number
+;;
+;; computes the euclidean distance of two pixels
+(define (pixel-euclidean-distance p1 p2)
+  (sqrt (+ (sqr (- (pixel-red p1) (pixel-red p2)))
+           (sqr (- (pixel-green p1) (pixel-green p2)))
+           (sqr (- (pixel-blue p1) (pixel-blue p2))))))
 
 ;; a Match is a
 ;;   (match String String Number Number Number Number Number)
