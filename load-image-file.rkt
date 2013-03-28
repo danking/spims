@@ -34,8 +34,8 @@
                        ;; the width and height don't matter because they will be
                        ;; replaced by the dimensions of the image we load
                        1 1
-                       ;; we are not loading a monochrome image
-                       #f
+                       ;; we are loading a monochrome image
+                       #t
                        ;; ignore alpha channel (transparency)
                        #f))
          (load-succesful?
