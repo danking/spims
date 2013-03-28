@@ -4,7 +4,7 @@
          math/matrix
          "data-structures.rkt")
 
-(provide map-bitmap fold-bitmap)
+(provide map-bitmap fold-bitmap pixel->grayscale)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; data-transformers.rkt
@@ -45,4 +45,11 @@
                                ((pixel (in-array row)))
                        (pixel-transformer pixel pixel-accumulator))
                      row-accumulator)))
+
+;; pixel->grayscale : [Pixel] -> Number]
+
+;; Returns the grayscale value for an RGB pixel
+;; (R * 11 + G * 16 + B * 5) / 32
+(define (pixel->grayscale p)
+  (/ (+ (* (pixel-red p) 11) (* (pixel-green p) 16) (* (pixel-blue p) 5)) 32))
 
