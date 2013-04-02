@@ -10,8 +10,9 @@ object KdTreeWrapper {
     createKdTree(vs, 0)
   }
 
-  type MyTuple = (Map[Int, Float], Map[Int, Float])
-  def createKdTree(vs: Seq[(Map[Int, Float], Map[Int, Float])], split: Int): Option[KdTree] = {
+  type MyVector[A] = Map[Int, A]
+  type MyTuple = (MyVector[Float], MyVector[Float])
+  def createKdTree(vs: Seq[(MyVector[Float], MyVector[Float])], split: Int): Option[KdTree] = {
     createKdTreeHelp(scala.util.Sorting.stableSort(vs, { (a: MyTuple, b: MyTuple) =>
                                   val (x,_) = a
                                   val (y,_) = b
@@ -19,7 +20,7 @@ object KdTreeWrapper {
                      split)
   }
 
-  private def createKdTreeHelp(sortedVs: Seq[(Map[Int, Float], Map[Int, Float])], split: Int): Option[KdTree] = {
+  private def createKdTreeHelp(sortedVs: Seq[(MyVector[Float], MyVector[Float])], split: Int): Option[KdTree] = {
     if (sortedVs.isEmpty) {
       return None
     } else {
@@ -33,7 +34,7 @@ object KdTreeWrapper {
     }
   }
 
-  class KdTree(val position: Map[Int, Float], val value: Map[Int, Float], split: Int, left: Option[KdTree], right: Option[KdTree]) {
+  class KdTree(val position: MyVector[Float], val value: MyVector[Float], split: Int, left: Option[KdTree], right: Option[KdTree]) {
     val dim = position.size
 
     def lowerOfSplit(n: KdTree) {
@@ -44,7 +45,7 @@ object KdTreeWrapper {
       n.position(this.split) >= this.position(this.split)
     }
 
-    def nearestneighbor(target: Map[Int, Float], boundingBox: (Map[Int, Float], Map[Int, Float])): KdTree = {
+    def nearestneighbor(target: MyVector[Float], boundingBox: (MyVector[Float], MyVector[Float])): KdTree = {
       val (boxMin, boxMax) = boundingBox
       val lowerBox = (boxMin.update(split, position(split)),
                       boxMax)
