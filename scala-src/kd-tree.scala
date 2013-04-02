@@ -36,12 +36,12 @@ object KdTreeWrapper {
   class KdTree(val position: Map[Int, Float], val value: Map[Int, Float], split: Int, left: Option[KdTree], right: Option[KdTree]) {
     val dim = position.size
 
-    def isLessThanOrEqualTo(n: KdTree) {
-      this.position(split) <= n.position(split)
+    def lowerOfSplit(n: KdTree) {
+      n.position(this.split) < this.position(this.split)
     }
 
-    def isGreaterThan(n: KdTree) {
-      this.position(split) > n.position(split)
+    def greaterOfSplit(n: KdTree) {
+      n.position(this.split) >= this.position(this.split)
     }
 
     def nearestneighbor(target: Map[Int, Float], boundingBox: (Map[Int, Float], Map[Int, Float])): KdTree = {
@@ -53,7 +53,7 @@ object KdTreeWrapper {
 
 
       val (subNearest, unsearchedKdTree, unsearchedBox) =
-        { if (target(this.split) < this.position(this.split))
+        { if (this.lowerOfSplit(target))
             this.left match {
               case None => (this, this.right, upperBox)
               case Some(left) =>
