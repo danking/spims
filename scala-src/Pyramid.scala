@@ -40,25 +40,29 @@ object Pyramid {
     var (i, j, k) = (-1, -1, -1)
 
     if (pix > 0) {
-      while (i <= 1)
-        while (j <= 1)
+      while (i <= 1) {
+        while (j <= 1) {
           while (k <= 1) {
             if (pix <  dogPyr(octv)(intvl + i).getGrey(x + j, y + k))
               return false
             k = k + 1
-            j = j + 1
-            i = i + 1
           }
+           j = j + 1
+        }
+        i = i + 1
+      }
     } else {
-      while (i <= 1)
-        while (j <= 1)
+      while (i <= 1) {
+        while (j <= 1) {
           while (k <= 1) {
             if (pix >  dogPyr(octv)(intvl + i).getGrey(x + j, y + k))
               return false
             k = k + 1
-            j = j + 1
-            i = i + 1
           }
+          j = j + 1
+        }
+        i = i + 1
+      }
     }
     false
   }
