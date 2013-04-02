@@ -1,13 +1,5 @@
 object KdTreeWrapper {
 
-  // def isLessThanOrEqualTo(n: Node) {
-  //   (position zip n.position).forall(case (x, y) => x <= y)
-  // }
-
-  // def isGreaterThan(n: Node) {
-  //   (position zip n.position).forall(case (x, y) => x > y)
-  // }
-
   def distance (u: Seq[Float], v: Seq[Float]) = {
     val sqrs = (u.elements zip v.elements).map({case ((_, u), (_, v)) => (u - v) * (u - v)})
     val sum = sqrs.foldLeft(0.0.toFloat)((acc, x) => (acc + x))
