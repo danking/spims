@@ -1,7 +1,7 @@
-import Paramater
+import Paramater._
 
 object Algorithm extends Logging{
-  
+
   def findPatternInSource(source: Bitmap, pattern: Bitmap) = {
     for (tly <- 0 until source.height - pattern.height + 1) {
       for (tlx <- 0 until source.width - pattern.width + 1) {
@@ -11,8 +11,8 @@ object Algorithm extends Logging{
   }
 
   def placeAtAndCompare(source: Bitmap, pattern: Bitmap, tly: Int, tlx: Int) = {
-    val totalDif = 0
-    val avgDif = 0
+    var totalDif = 0
+    var avgDif = 0
     (for {
       y <- 0 until pattern.height
       x <- 0 until pattern.width
@@ -22,7 +22,7 @@ object Algorithm extends Logging{
         debug("avgDif = " + toString(avgDif))
         val dif = Math.abs(pattern(x, y) - source(x + tlx, y + tly))
         val size = pattern.height * pattern.width
-        totalDif += dif
+        totalDif = totalDif + dif
         avgDif = totalDif/size
         preMatch(x, y, avgDif)
         }).toArray
