@@ -22,7 +22,7 @@ object Bitmap {
   def load(path: String) = {
     val file = new File(path)
 
-    if (!file.exists())
+    if (!file.exists)
       throw new IOException("Cannot find file: " + path)
 
     ImageIO.read(file)
