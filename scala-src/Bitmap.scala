@@ -11,6 +11,14 @@ object Bitmap {
     new Bitmap(w, h, rgb, fmt)
   }
 
+  def convertToGrey(bi: BufferedImage) = {
+    val greyImg = new BufferedImage(bi.getWidth, bi.getHeight, BufferedImage.TYPE_BYTE_GRAY)
+    val g = greyImg.getGraphics
+    g.drawImage(bi, 0, 0, null)
+    g.dispose
+    greyImg
+  }
+
   def load(path: String) = {
     val file = new File(path)
 
