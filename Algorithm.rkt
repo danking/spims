@@ -50,11 +50,11 @@
 (define (average-pixel-difference/short-circuiting top-left-x top-left-y
                                                    pattern source
                                                    average-difference-tolerance)
-  (apd/sc/pattern  top-left-x top-left-y
-                   pattern source
-                   average-difference-tolerance
-                   (in-parallel (in-range 0 (bitmap-width pattern))
-                                (in-range 0 (bitmap-height pattern)))))
+  (apd/sc/pattern2  top-left-x top-left-y
+                    pattern source
+                    average-difference-tolerance
+                    (in-parallel (in-range 0 (bitmap-width pattern))
+                                 (in-range 0 (bitmap-height pattern)))))
 
 ;; apd/sc/plus-sign : Natural Natural
 ;;                    ImageBitmap ImageBitmap
@@ -99,6 +99,33 @@
          (for*/fold
              ((total-difference 0))
              (((current-x-of-pattern current-y-of-pattern) x/y-seq)
+              ;; if the total difference was set to #f in the last iteration, stop
+              #:break (false? total-difference))
+           (let* ((current-x-of-source (+ current-x-of-pattern top-left-x))
+                  (current-y-of-source (+ current-y-of-pattern top-left-y))
+                  (current-difference (pixel-difference-in-bitmap-at
+                                       pattern source
+                                       current-x-of-pattern current-y-of-pattern
+                                       current-x-of-source current-y-of-source))
+                  (new-total (+ total-difference current-difference))
+                  (new-average (/ new-total pattern-size)))
+             (and (tolerable-average? new-average) new-total)))))
+    (and difference (/ difference pattern-size))))
+
+(define (apd/sc/pattern2 top-left-x top-left-y
+                         pattern source
+                         average-difference-tolerance
+                         x-seq
+                         y-seq)
+  (define (tolerable-average? average)
+    (<= average average-difference-tolerance))
+  (define pattern-size (* (bitmap-width pattern)
+                          (bitmap-height pattern)))
+  (let ((difference
+         (for*/fold
+             ((total-difference 0))
+             ((current-x-of-pattern x-seq)
+              (current-y-of-pattern y-seq)
               ;; if the total difference was set to #f in the last iteration, stop
               #:break (false? total-difference))
            (let* ((current-x-of-source (+ current-x-of-pattern top-left-x))
