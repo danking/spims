@@ -30,7 +30,9 @@
 (define (do-c-style pattern-filename source-filename)
   (let ((pattern-image (filename->bitmap% pattern-filename))
         (source-image (filename->bitmap% source-filename)))
-    (for/list ((pre-match (c-style pattern-image source-image)))
+    (debug-msg "Finally starting match algo after ~a ms"
+               (- (current-inexact-milliseconds) start-time))
+    (for/list ((pre-match (time (c-style pattern-image source-image))))
       (pre-match->match pre-match
                         (send pattern-image get-width)
                         (send pattern-image get-height)
@@ -57,6 +59,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; executed section
 
+(define start-time (current-inexact-milliseconds))
+
 (parameterize
     ;; assume we're in debug mode.
     ([error-display-handler error-display-handler-no-stack-trace])
@@ -73,7 +77,13 @@
 
         (debug-msg "looking at: ~a\n" source-filename)
 
-        (print-matches (image-filepath-pair->matches pattern-filename
-                                                     source-filename
-                                                     tolerance
-                                                     algo))))))
+        (let ((possible-matches
+               (image-filepath-pair->matches pattern-filename
+                                             source-filename
+                                             tolerance
+                                             algo)))
+          (debug-msg "Done match algo after ~a ms"
+                     (- (current-inexact-milliseconds) start-time))
+          (time (print-matches possible-matches))
+          (debug-msg "Totally done after ~a ms"
+                     (- (current-inexact-milliseconds) start-time)))))))
