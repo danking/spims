@@ -24,23 +24,31 @@
 ;; image-filepath-pair->matches : String String Number -> [ListOf Match]
 (define (image-filepath-pair->matches pattern-filename source-filename tolerance
                                       algo)
-  (for/list
-      ((pre-match
-        (cond [(eq? algo 'c-style)
-               (let ((pattern-image (filename->bitmap% pattern-filename))
-                     (source-image (filename->bitmap% source-filename)))
-                 (c-style pattern-image source-image))]
-              [else
-               (let ((pattern-image (load-image-file pattern-filename))
-                     (source-image (load-image-file source-filename)))
-                 (brute-force/tolerance pattern-image
-                                        source-image
-                                        tolerance))])))
-    (pre-match->match pre-match
-                      (bitmap-width pattern-image)
-                      (bitmap-height pattern-image)
-                      pattern-filename
-                      source-filename)))
+  (cond [(eq? algo 'c-style) (do-c-style pattern-filename source-filename)]
+        [else (do-brute-force pattern-filename source-filename tolerance)]))
+
+(define (do-c-style pattern-filename source-filename)
+  (let ((pattern-image (filename->bitmap% pattern-filename))
+        (source-image (filename->bitmap% source-filename)))
+    (for/list ((pre-match (c-style pattern-image source-image)))
+      (pre-match->match pre-match
+                        (send pattern-image get-width)
+                        (send pattern-image get-height)
+                        pattern-filename
+                        source-filename))))
+
+(define (do-brute-force pattern-filename source-filename tolerance)
+  (let ((pattern-image (load-image-file pattern-filename))
+        (source-image (load-image-file source-filename)))
+   (for/list
+       ((pre-match (brute-force/tolerance pattern-image
+                                          source-image
+                                          tolerance)))
+     (pre-match->match pre-match
+                       (bitmap-width pattern-image)
+                       (bitmap-height pattern-image)
+                       pattern-filename
+                       source-filename))))
 
 (define (error-display-handler-no-stack-trace message exn)
   (printf "spims: ~a\n" message))
