@@ -2,7 +2,8 @@
 
 (require "ffi.rkt"
          "sad-manipulate.rkt"
-         "../../data-structures.rkt")
+         "../../data-structures.rkt"
+         "../../logging.rkt")
 
 (provide c-style)
 
@@ -17,7 +18,12 @@
          (range (- max min))
          (5% (* range TOELRABLE_RANGE_FROM_MIN))
          (tolerance (+ min 5%)))
+    (debug-msg "max sad: ~a" (* (send pat get-width)
+                                (send pat get-height)
+                                MAXIMUM_AVERAGE_SAD))
     (if (< min
-           (* (sad-w sad) (sad-h sad) MAXIMUM_AVERAGE_SAD))
+           (* (send pat get-width)
+              (send pat get-height)
+              MAXIMUM_AVERAGE_SAD))
         (sad-filter sad (lambda (val) (< val tolerance)))
         empty)))
