@@ -48,12 +48,12 @@ int * from_racket(char* pattern, char* source,
   int sad_h = (source_h - pattern_h + 1);
 
   int max = res[0];
-  int max_x = 1;
-  int max_y = 1;
+  int max_x = 0;
+  int max_y = 0;
 
   int min = res[0];
-  int min_x = 1;
-  int min_y = 1;
+  int min_x = 0;
+  int min_y = 0;
 
 
   int y;
