@@ -88,13 +88,5 @@
       4
       (add1 (- srch path)))))
 
-(require "data-structures.rkt")
-(define (find-less-than sad-vals tolerance)
-  (for*/list ((x (in-range 0 (sad-array-w sad-vals)))
-              (y (in-range 0 (sad-array-h sad-vals)))
-              #:when (< (sad-get sad-vals x y)
-                        tolerance))
-    (pre-match x y (sad-get sad-vals x y))))
-
 (define (image-pair->pre-matches i1 i2)
   (get-sad i1 i2))
