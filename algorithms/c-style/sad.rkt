@@ -12,5 +12,5 @@
          (max (pre-match-avg-diff (sad-max sad)))
          (range (- max min))
          (5% (* range 0.05))
-         (tolerance (+ max 5%)))
+         (tolerance (+ min 5%)))
     (sad-filter sad (lambda (val) (< val tolerance)))))
