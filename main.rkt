@@ -30,7 +30,7 @@
 (define (do-c-style pattern-filename source-filename)
   (let ((pattern-image (filename->bitmap% pattern-filename))
         (source-image (filename->bitmap% source-filename)))
-    (debug-msg "Finally starting match algo after ~a ms"
+    (debug-msg "Finally starting match algo after ~a ms\n"
                (- (current-inexact-milliseconds) start-time))
     (for/list ((pre-match (time (c-style pattern-image source-image))))
       (pre-match->match pre-match
@@ -82,8 +82,8 @@
                                              source-filename
                                              tolerance
                                              algo)))
-          (debug-msg "Done match algo after ~a ms"
+          (debug-msg "Done match algo after ~a ms\n"
                      (- (current-inexact-milliseconds) start-time))
           (time (print-matches possible-matches))
-          (debug-msg "Totally done after ~a ms"
+          (debug-msg "Totally done after ~a ms\n"
                      (- (current-inexact-milliseconds) start-time)))))))
