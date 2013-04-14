@@ -61,11 +61,42 @@
                      (match-n1 m1))
         LOCATION-INTOLERANCE)))
 
-(define (simple-filter results)
-  (reverse (foldl (lambda (x lst)
-                    (cons x (filter-not (curry duplicate? x) lst)))
-                  '()
-                  results)))
+;; only-best-of-dupes : [ListOf Match] -> [ListOf Match]
+;;
+;; take an initial list of matches, split into lists of duplicates, and choose
+;; the best of each list of duplicates.
+(define (only-best-of-dupes results)
+  (map get-best-match (group-dupes results)))
+
+;; get-best-match : [ListOf Match] -> Match
+;;
+;; this expects one of the sublists from the output of group-dupes. It will
+;; return the member of the list with the smallest "avg-diff"
+(define (get-best-match ls)
+  (foldl (lambda (x y)
+           (if (< (match-avg-diff x)
+                  (match-avg-diff y))
+               x
+               y))
+         (first ls)
+         (rest ls)))
+
+;; group-dupes : [ListOf Match] -> [ListOf [ListOf Match]]
+;;
+;; splits the initial list of matches into a list of lists where each
+;; sub-list is a list of "duplicate?" matches.
+(define (group-dupes results)
+  (let loop ((dupe-lists '())
+             (results-set (list->set results)))
+    (if (set-empty? results-set)
+        dupe-lists
+        (let ((m (set-first results-set))
+              (others (set-rest results-set)))
+          (let ((dupes (for/set ((o others)
+                                 #:when (duplicate? m o))
+                         o)))
+            (loop (cons (cons m (set->list dupes)) dupe-lists)
+                  (set-subtract others dupes)))))))
 
 (define (print-matches results)
-  (for-each print-match (simple-filter results)))
+  (for-each print-match (only-best-of-dupes results)))
