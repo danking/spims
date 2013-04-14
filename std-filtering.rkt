@@ -18,7 +18,7 @@
 (define (std-filter lop)
   (let* ((mean (mean lop))
          (std (std lop mean)))
-    (filter (λ (p) (< (- (pre-match-avg-diff p) std std) mean)) lop)))
+    (filter (λ (p) (< (+ (pre-match-avg-diff p) std std) mean)) lop)))
 
 
 #|(define list1 (list (pre-match 0 0 100)
