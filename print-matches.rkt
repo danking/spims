@@ -6,7 +6,7 @@
 
 (define LOWER-SIZE-TOLERANCE 1.2)   ;; Used when we have scaling
 (define UPPER-SIZE-TOLERANCE .8)    ;; Used when we have scaling
-(define LOCATION-INTOLERANCE 15)
+(define LOCATION-INTOLERANCE 2)
 (define (pythagorean a b)
   (sqrt (+ (expt a 2) (expt b 2))))
 
