@@ -3,7 +3,7 @@
 (require racket/draw
          "data-structures.rkt")
 
-(provide load-image-file)
+(provide load-image-file filename->bitmap%)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; load-image-file.rkt

@@ -24,21 +24,23 @@
 ;; image-filepath-pair->matches : String String Number -> [ListOf Match]
 (define (image-filepath-pair->matches pattern-filename source-filename tolerance
                                       algo)
-  (let ((pattern-image (load-image-file pattern-filename))
-        (source-image (load-image-file source-filename)))
-
-    (for/list ((pre-match
-                (if (eq? algo 'c-style)
-                    (c-style pattern-image source-image)
-                    (brute-force/tolerance pattern-image
-                                           source-image
-                                           tolerance))))
-
-      (pre-match->match pre-match
-                        (bitmap-width pattern-image)
-                        (bitmap-height pattern-image)
-                        pattern-filename
-                        source-filename))))
+  (for/list
+      ((pre-match
+        (cond [(eq? algo 'c-style)
+               (let ((pattern-image (filename->bitmap% pattern-filename))
+                     (source-image (filename->bitmap% source-filename)))
+                 (c-style pattern-image source-image))]
+              [else
+               (let ((pattern-image (load-image-file pattern-filename))
+                     (source-image (load-image-file source-filename)))
+                 (brute-force/tolerance pattern-image
+                                        source-image
+                                        tolerance))])))
+    (pre-match->match pre-match
+                      (bitmap-width pattern-image)
+                      (bitmap-height pattern-image)
+                      pattern-filename
+                      source-filename)))
 
 (define (error-display-handler-no-stack-trace message exn)
   (printf "spims: ~a\n" message))
