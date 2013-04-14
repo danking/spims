@@ -32,7 +32,7 @@
         (source-image (filename->bitmap% source-filename)))
     (debug-msg "Finally starting match algo after ~a ms\n"
                (- (current-inexact-milliseconds) start-time))
-    (for/list ((pre-match (time (c-style pattern-image source-image))))
+    (for/list ((pre-match (c-style pattern-image source-image)))
       (pre-match->match pre-match
                         (send pattern-image get-width)
                         (send pattern-image get-height)
@@ -84,6 +84,6 @@
                                              algo)))
           (debug-msg "Done match algo after ~a ms\n"
                      (- (current-inexact-milliseconds) start-time))
-          (time (print-matches possible-matches))
+          (print-matches possible-matches)
           (debug-msg "Totally done after ~a ms\n"
                      (- (current-inexact-milliseconds) start-time)))))))
