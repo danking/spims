@@ -1,7 +1,7 @@
 #lang racket
 
-(require "data-structures.rkt"
-         2htdp/image)
+(require "../data-structures.rkt"
+         "../logging.rkt")
 
 (provide find-pattern-in-source find-pattern-in-source/tolerance)
 
@@ -16,7 +16,7 @@
   (find-pattern-in-source/tolerance pattern source 0))
 
 (define (find-pattern-in-source/tolerance pattern source pixel-difference-tolerance)
-  (define check-function apd/sc/plus-sign)
+  (define check-function average-pixel-difference/short-circuiting)
 
   (for*/list ((top-left-x (in-range 0 (add1 (- (bitmap-width source)
                                                (bitmap-width pattern)))))
@@ -31,10 +31,10 @@
                                          pattern source
                                          pixel-difference-tolerance)))
               ;; if the avg-diff is false, then don't execute the body
-              #:when (begin (when (and (debug) (zero? (modulo top-left-x 300)))
-                              (printf "  at (~a,~a), tolerance ~a, avg-diff ~a\n"
-                                      top-left-x top-left-y pixel-difference-tolerance
-                                      avg-diff))
+              #:when (begin (when (zero? (modulo top-left-x 300))
+                              (debug2-msg "  at (~a,~a), tolerance ~a, avg-diff ~a\n"
+                                          top-left-x top-left-y pixel-difference-tolerance
+                                          avg-diff))
                             avg-diff))
     (pre-match top-left-x top-left-y avg-diff)))
 
@@ -53,8 +53,8 @@
   (apd/sc/pattern2  top-left-x top-left-y
                     pattern source
                     average-difference-tolerance
-                    (in-parallel (in-range 0 (bitmap-width pattern))
-                                 (in-range 0 (bitmap-height pattern)))))
+                    (in-range 0 (bitmap-width pattern))
+                    (in-range 0 (bitmap-height pattern))))
 
 ;; apd/sc/plus-sign : Natural Natural
 ;;                    ImageBitmap ImageBitmap

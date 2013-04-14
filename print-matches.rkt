@@ -1,6 +1,7 @@
 #lang racket
 
-(require "data-structures.rkt")
+(require "data-structures.rkt"
+         "logging.rkt")
 
 (provide print-match print-matches)
 
@@ -51,7 +52,7 @@
   (define size ratio (/ (* (match-m1 m1) (match-n1 m1))
                         (* (match-m1 m2) (match-n1 m2))))
   (and (< ratio UPPER-SIZE-TOLERANCE)
-       (> ratio LOWER-SIZE-TOLERANCE)))|#
+       (> ratio LOWER-SIZE-TOLERANCE))|#
 
 (define (same-loc m1 m2)
   (< (pythagorean (- (match-x m1) (match-x m2))

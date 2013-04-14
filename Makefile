@@ -7,8 +7,11 @@ SPIMS_BUILD       ?= $(SPIMS_RACO) exe
 SPIMS_COMPILE     ?= $(SPIMS_RACO) make
 
 
-all:
+all: c-stuff
 	@$(SPIMS_BUILD) -o $(SPIMS_EXECUTABLE) $(SPIMS_ENTRY_POINT)
+
+c-stuff:
+	@cd algorithms/c-style/c && gcc -shared -rdynamic -O3 -msse2 -I. main.c read.c -o libsad.so
 
 byte-compile:
 	@$(SPIMS_COMPILE) $(SPIMS_ENTRY_POINT)

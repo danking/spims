@@ -22,8 +22,9 @@
 (define (parse-arguments arguments)
   (let ((pattern-image-filenames '())
         (source-image-filenames '())
-        (debug #f)
-        (tolerance 26))
+        (log-level 0)
+        (tolerance 26)
+        (algo 'c-style))
     ;; This expression returns (void) because there is no #:args clause. A #:args
     ;; clause could be used to parse arguments which succeed the regular, flagged
     ;; arguments.
@@ -58,10 +59,16 @@
                    (set! source-image-filenames (directory-list foldername #:build? #t))]
                   ;; debug flag
                   #:once-each
-                  [("-d" "--debug") "increased debug output"
-                   (set! debug #t)]
                   ["--tolerance" t "the average pixel difference tolerance"
-                   (set! tolerance (string->number t))])
+                   (set! tolerance (string->number t))]
+                  ["--algorithm" a "the match algorithm: {c-style, brute-force} (default: c-style)"
+                   (set! algo (cond [(string=? a "c-style") 'c-style]
+                                    [(string=? a "brute-force") 'brute-force]
+                                    ;; otherwise don't change it
+                                    [else algo]))]
+                  #:multi
+                  [("-d" "--debug") "increased debug output"
+                   (set! log-level (add1 log-level))])
     ;; verify that the necessary arguments were passed
     (when (empty? source-image-filenames)
       (error 'parse-arguments
@@ -71,7 +78,7 @@
              "You must specify at least one pattern image (is the directory empty?) -- see 'spims -h' for help."))
     ;; this returns two values, you can use a (let-values (((a b) ...) ...) ...)
     ;; form to capture these values
-    (values pattern-image-filenames source-image-filenames debug tolerance)))
+    (values pattern-image-filenames source-image-filenames log-level tolerance algo)))
 
 
 ;; fix-args : [Vector String] -> [Vector String]

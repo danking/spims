@@ -3,8 +3,9 @@
 (require "data-structures.rkt"
          "load-image-file.rkt"
          "parse-command-line.rkt"
-         "Algorithm.rkt"
-         "print-matches.rkt")
+         "algorithms.rkt"
+         "print-matches.rkt"
+         "logging.rkt")
 
 ;; match-coordinates->match : PreMatch
 ;;                            Number Number
@@ -21,14 +22,17 @@
            x y avg-diff)))
 
 ;; image-filepath-pair->matches : String String Number -> [ListOf Match]
-(define (image-filepath-pair->matches pattern-filename source-filename tolerance)
+(define (image-filepath-pair->matches pattern-filename source-filename tolerance
+                                      algo)
   (let ((pattern-image (load-image-file pattern-filename))
         (source-image (load-image-file source-filename)))
 
     (for/list ((pre-match
-                (find-pattern-in-source/tolerance pattern-image
-                                                  source-image
-                                                  tolerance)))
+                (if (eq? algo 'c-style)
+                    (c-style pattern-image source-image)
+                    (brute-force/tolerance pattern-image
+                                           source-image
+                                           tolerance))))
 
       (pre-match->match pre-match
                         (bitmap-width pattern-image)
@@ -46,18 +50,20 @@
 (parameterize
     ;; assume we're in debug mode.
     ([error-display-handler error-display-handler-no-stack-trace])
-  (let-values (((pattern-filenames source-filenames debug-setting tolerance)
+  (let-values (((pattern-filenames source-filenames log-level tolerance algo)
                 (parse-arguments (current-command-line-arguments))))
+    (set-log-level log-level)
     (parameterize
-        ([debug debug-setting]
-         ;; if we really are in debug mode, switch to a normal error reporter
+        (;; if we really are in debug mode, switch to a normal error reporter
          [error-display-handler (if (debug)
                                     regular-error-display-handler
                                     error-display-handler-no-stack-trace)])
       (for* ((pattern-filename pattern-filenames)
              (source-filename source-filenames))
-        (when (debug) (printf "looking at: ~a\n" source-filename))
-        (print-matches
-         (image-filepath-pair->matches pattern-filename
-                                       source-filename
-                                       tolerance))))))
+
+        (debug-msg "looking at: ~a\n" source-filename)
+
+        (print-matches (image-filepath-pair->matches pattern-filename
+                                                     source-filename
+                                                     tolerance
+                                                     algo))))))

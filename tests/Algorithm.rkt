@@ -1,7 +1,7 @@
 #lang racket
 
 (require rackunit
-         "../Algorithm.rkt"
+         "../algorithms/brute-force.rkt"
          "../data-structures.rkt")
 
 (provide algorithm-tests)

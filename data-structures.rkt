@@ -8,6 +8,8 @@
          ;; parameters
          debug biggest-diff)
 
+(require "logging.rkt")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; data-structures.rkt
 ;;
@@ -62,7 +64,6 @@
     (for/vector ((x (in-range width)))
       (generator x y))))
 
-(define debug (make-parameter #f))
 (define biggest-diff (make-parameter 0))
 
 ;; pixels-match-with-tolerance? ImageBitmap ImageBitmap Number Number Number Number -> Boolean
