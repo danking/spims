@@ -1,6 +1,7 @@
 #lang racket
 
 (require "ffi.rkt"
+         ffi/unsafe
          "sad-manipulate.rkt"
          "../../data-structures.rkt"
          "../../logging.rkt")
@@ -28,8 +29,9 @@
            (* (send pat get-width)
               (send pat get-height)
               MAXIMUM_AVERAGE_SAD))
+        (begin0
         (cond [(debug)
-               (debug-msg "filter\n")
-               (time (sad-filter sad (lambda (val) (< val tolerance))))]
-              [else (sad-filter sad (lambda (val) (< val tolerance)))])
+               (time (sad-filter sad (lambda (val) (<= val tolerance))))]
+              [else (sad-filter sad (lambda (val) (<= val tolerance)))])
+        (free (sad-bs sad)))
         empty)))
