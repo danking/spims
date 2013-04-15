@@ -4,6 +4,7 @@
 
 (require ffi/unsafe
          ffi/unsafe/define
+         ffi/unsafe/custodian
          "../../data-structures.rkt"
          "sad-data.rkt"
          racket/runtime-path)
@@ -63,21 +64,24 @@
         (srch (send src get-height)))
     (let ((sadw (add1 (- srcw patw)))
           (sadh (add1 (- srch path))))
-      (sad
-       (make-sized-byte-string
-        (from_racket (bitmap->bytes pat)
-                     (bitmap->bytes src)
-                     patw
-                     path
-                     srcw
-                     srch)
-        (* (add1 (- srcw patw))
-           4 ;; because ints are 4 bytes
-           (add1 (- srch path))))
-       sadw sadh
-       (stats (c-prematch->prematch (get_max))
-              (c-prematch->prematch (get_min))
-              #f
-              #f)))))
+      (let ((sad-bytes (make-sized-byte-string
+                        (from_racket (bitmap->bytes pat)
+                                     (bitmap->bytes src)
+                                     patw
+                                     path
+                                     srcw
+                                     srch)
+                        (* (add1 (- srcw patw))
+                           4 ;; because ints are 4 bytes
+                           (add1 (- srch path))))))
+        (register-custodian-shutdown sad-bytes
+                                     (lambda (x) (free x))
+                                     #:at-exit? #t)
+        (sad sad-bytes
+             sadw sadh
+             (stats (c-prematch->prematch (get_max))
+                    (c-prematch->prematch (get_min))
+                    #f
+                    #f))))))
 
 
