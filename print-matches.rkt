@@ -86,10 +86,12 @@
 ;; splits the initial list of matches into a list of lists where each
 ;; sub-list is a list of "duplicate?" matches.
 (define (group-dupes results)
+  (debug-msg "[group-dupes] results list: ~a\n" results)
   (let loop ((dupe-lists '())
              (results-set (list->set results)))
     (if (set-empty? results-set)
-        dupe-lists
+        (begin (debug-msg "[group-dupes] segregated list: ~a\n" dupe-lists)
+               dupe-lists)
         (let ((m (set-first results-set))
               (others (set-rest results-set)))
           (let ((dupes (for/set ((o others)
