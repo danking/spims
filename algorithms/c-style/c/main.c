@@ -126,7 +126,7 @@ int inner_sad(char* pattern, char* source, int w, int h, int source_w) {
     /* if we have 20 pixels, we'll do 16 the quick way and four this way */
     int extra;
     for(extra = words * 8; extra < w; ++extra) {
-      char temp = pattern[w*y + extra] - source[source_w*y + extra];
+      int temp = pattern[w*y + extra] - source[source_w*y + extra];
       if(temp < 0)
         temp = -temp;
       sad += temp;
