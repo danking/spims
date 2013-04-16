@@ -62,7 +62,7 @@
 (define start-time (current-inexact-milliseconds))
 
 (parameterize
-    ;; assume we're in debug mode.
+    ;; assume we're not in debug mode.
     ([error-display-handler error-display-handler-no-stack-trace])
   (let-values (((pattern-filenames source-filenames log-level tolerance algo)
                 (parse-arguments (current-command-line-arguments))))
