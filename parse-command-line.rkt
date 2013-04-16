@@ -36,7 +36,7 @@
                   ["-p" filename "the pattern image"
                    (unless (file-exists? filename)
                      (error 'parse-arguments
-                            (format "The file ~a does not exist!" filename)))
+                            (format "~a is not a file or does not exist!" filename)))
                    (set! pattern-image-filenames (list (string->path filename)))]
                   ["--pdir" foldername "the pattern folder"
                    (unless (directory-exists? foldername)
@@ -49,7 +49,7 @@
                   ["-s" filename "the source image"
                    (unless (file-exists? filename)
                      (error 'parse-arguments
-                            (format "the file ~a does not exist!" filename)))
+                            (format "~a is not a file or does not exist!" filename)))
                    (set! source-image-filenames (list (string->path filename)))]
                   ["--sdir" foldername "the source folder"
                    (unless (directory-exists? foldername)
@@ -76,6 +76,12 @@
     (when (empty? pattern-image-filenames)
       (error 'parse-arguments
              "You must specify at least one pattern image (is the directory empty?) -- see 'spims -h' for help."))
+    (when (ormap directory-exists? source-image-filenames)
+      (error 'parse-arguments
+             "Source directory arguments must not contain directories -- see 'spims -h' for help."))
+    (when (ormap directory-exists? pattern-image-filenames)
+      (error 'parse-arguments
+             "Pattern directory arguments must not contain directories -- see 'spims -h' for help."))
     ;; this returns two values, you can use a (let-values (((a b) ...) ...) ...)
     ;; form to capture these values
     (values pattern-image-filenames source-image-filenames log-level tolerance algo)))
