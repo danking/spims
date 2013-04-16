@@ -16,13 +16,9 @@
 ;; load-image-file : Path -> ImageBitmap
 (define (load-image-file filename)
   (let ((bitmap-object (filename->bitmap% filename)))
-    (if bitmap-object
-        (let-values (((image-bytes width height)
-                      (bitmap%->bytes bitmap-object)))
-          (bytes->pixel-matrix image-bytes width height))
-        (error 'load-image-file
-               (format "The file ~a does not contain an image in a valid format!"
-                       filename)))))
+    (let-values (((image-bytes width height)
+                  (bitmap%->bytes bitmap-object)))
+      (bytes->pixel-matrix image-bytes width height))))
 
 ;; filename->bitmap% : Path -> (U False bitmap%)
 ;;
@@ -45,7 +41,9 @@
                 'unknown)))
     (if load-succesful?
         new-image
-        #f)))
+        (error 'load-image-file
+               (format "The file ~a does not contain an image in a valid format!"
+                       filename)))))
 
 ;; bitmap%->bytes : bitmap% -> [Values Bytes Number Number]
 ;;
