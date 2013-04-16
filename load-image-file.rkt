@@ -1,7 +1,8 @@
 #lang racket
 
 (require racket/draw
-         "data-structures.rkt")
+         "data-structures.rkt"
+         "logging.rkt")
 
 (provide load-image-file filename->bitmap%)
 
@@ -22,8 +23,32 @@
 
 ;; filename->bitmap% : Path -> (U False bitmap%)
 ;;
-;; loads the file into a bitmap object, or, if that fails, returns false
+;; loads the file into a bitmap object, or, if that fails, throws an error
 (define (filename->bitmap% filename)
+  (let ((maybe-image (or (try-filename->bitmap% filename)
+                         (convert-to-png-then-load filename))))
+    (or maybe-image
+        (error 'load-image-file
+               (format "The file ~a does not contain an image in a valid format!"
+                       filename)))))
+
+;; convert-to-png-then-load : Path -> (U False bitmap%)
+;;
+;; tries to convert a file to a png then load it with `try-filename->bitmap%'
+;; this can sometimes resolve idiotic problems resulting from gifs and pngs
+(define (convert-to-png-then-load filename)
+  (debug-msg "found a weird file (~a), trying a png conversion\n" filename)
+  (let* ((temporary-file (path-replace-suffix (make-temporary-file) ".png"))
+         (successful? (system (format "convert ~a ~a"
+                                      filename temporary-file))))
+    (debug-msg "the system call returned ~a, temporary-file is: ~a\n"
+               successful? temporary-file)
+    (and successful? (try-filename->bitmap% temporary-file))))
+
+;; try-filename->bitmap% : Path -> (U False bitmap%)
+;;
+;; loads the file into a bitmap object, or, if that fails, returns false
+(define (try-filename->bitmap% filename)
   (let* ((new-image
           (make-object bitmap%
                        ;; the width and height don't matter because they will be
@@ -41,9 +66,7 @@
                 'unknown)))
     (if load-succesful?
         new-image
-        (error 'load-image-file
-               (format "The file ~a does not contain an image in a valid format!"
-                       filename)))))
+        #f)))
 
 ;; bitmap%->bytes : bitmap% -> [Values Bytes Number Number]
 ;;
