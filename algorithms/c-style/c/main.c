@@ -81,8 +81,8 @@ int * from_racket(char* pattern, char* source,
   min_pm.x = min_x;
   min_pm.y = min_y;
 
-  fprintf(stderr, "max is at (%d, %d): %d\n", max_x, max_y, max);
-  fprintf(stderr, "min is at (%d, %d): %d\n", min_x, min_y, min);
+  // fprintf(stderr, "max is at (%d, %d): %d\n", max_x, max_y, max);
+  // fprintf(stderr, "min is at (%d, %d): %d\n", min_x, min_y, min);
 
   return res;
 
