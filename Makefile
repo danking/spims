@@ -30,5 +30,6 @@ package:
 	@cp Makefile $($@_ZIP_DIR)
 	@cp README $($@_ZIP_DIR)
 	@cp ./*.rkt $($@_ZIP_DIR)
+	@cp -r ./algorithms $($@_ZIP_DIR)
 	@cd $($@_TMP) && tar czf $($@_CWD)/spims.tar.gz spims && cd $($@_CWD)
 	@rm -rf $($@_TMP)
